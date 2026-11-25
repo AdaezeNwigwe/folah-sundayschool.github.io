@@ -132,12 +132,15 @@ h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}
 @media(max-width:700px){body{font-size:16px}.intro,.hero{grid-template-columns:1fr;gap:8px}.item{grid-template-columns:52px minmax(0,1fr)}.item .em{font-size:38px}.item .side{grid-column:1/-1;flex-direction:row;justify-content:space-between;align-items:center}.games,.tips{grid-template-columns:1fr}.two{gap:10px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .tbox{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:14px}.tbtn{display:inline-flex;align-items:center;min-height:44px;padding:8px 18px;border-radius:999px;background:#15803d;color:#fff;font:600 16px var(--display,inherit);text-decoration:none}button.tbtn{border:0;cursor:pointer;font-family:inherit}.tbtn:disabled{opacity:.7}.tbtn:hover{filter:brightness(1.08)}.tbtn.done{background:#166534}.tnote{font-size:14px;color:var(--muted)}.tbadge{display:inline-block;font:600 13px var(--display,inherit);padding:4px 12px;border-radius:999px;background:#dcfce7;color:#166534;white-space:nowrap}:root[data-theme=dark] .tbadge{background:#14532d;color:#bbf7d0}
+.folahbar{display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 16px;background:linear-gradient(135deg,#6a2079,#4a0e5e);color:#fff;text-decoration:none;font:600 15px/1.2 var(--display,system-ui),system-ui,sans-serif;letter-spacing:.02em;border-radius:0 0 18px 18px}.folahbar img{height:34px;width:auto;display:block}.folahbar span{border-left:1px solid rgba(255,255,255,.45);padding-left:12px}.folahbar:hover span{text-decoration:underline}@media(max-width:420px){.folahbar img{height:26px}.folahbar{font-size:14px}}
 </style></head><body>
+<a class="folahbar" href="index.html" target="_self" aria-label="FOLAH Sunday School home"><img src="files/folah-logo-white.png" alt="Fountain of Life Church"><span>Sunday School</span></a>
+
 <div class="wrap">
  <header class="top">
   <button class="brand" id="home" aria-label="All Buds lessons">
    <svg viewBox="0 0 46 46" aria-hidden="true"><path d="M23 42V22" stroke="var(--leaf)" stroke-width="4" stroke-linecap="round"/><path d="M23 24C23 14 15 8 6 9c0 10 7 16 17 15z" fill="var(--leaf)"/><path d="M23 20C23 11 30 5 40 6c0 9-7 15-17 14z" fill="var(--leaf)" opacity=".75"/><circle cx="23" cy="42" r="3" fill="var(--sun)"/></svg>
-   <div><small>Sunday School · Ages 1-5</small><b>Buds</b></div>
+   <div><small>FOLAH Sunday School · Ages 1-5</small><b>Buds</b></div>
   </button>
   <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn ghost" href="index.html" target="_self" style="text-decoration:none;display:inline-flex;align-items:center">🏠 Sunday School</a><button class="btn ghost" id="backBtn" hidden>← All lessons</button></div>
  </header>
