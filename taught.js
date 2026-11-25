@@ -1,0 +1,1 @@
+window.TAUGHT={"Buds":{},"Bloomers":{}};

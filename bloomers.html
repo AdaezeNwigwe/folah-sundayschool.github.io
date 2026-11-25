@@ -1,0 +1,908 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Bloomers Lessons</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Layout: classroom screen. One lesson section at a time, huge tap targets, week color drives everything. */
+:root {
+  --bg: #FBF7F2;
+  --paper: #FFFFFF;
+  --ink: #2A1F3D;
+  --muted: #6B6080;
+  --line: #E6DDEA;
+  --soft: #F3ECF7;
+  --good: #15803D;
+  --good-bg: #DCFCE7;
+  --bad: #B91C1C;
+  --bad-bg: #FEE2E2;
+  --sun: #FACC15;
+  --w1: #C2410C; --w1-soft: #FFEDD5;
+  --w2: #A16207; --w2-soft: #FEF3C7;
+  --w3: #1D4ED8; --w3-soft: #DBEAFE;
+  --w4: #0F766E; --w4-soft: #CCFBF1;
+  --w5: #BE185D; --w5-soft: #FCE7F3;
+  --display: "Fredoka", "Trebuchet MS", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --accent: var(--w1); --accent-soft: var(--w1-soft);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #17121F; --paper: #221B2E; --ink: #F3EEF8; --muted: #B5AAC6; --line: #3A3049; --soft: #2C2340;
+  --good: #4ADE80; --good-bg: #14321F; --bad: #F87171; --bad-bg: #3B1717; --sun: #FACC15;
+  --w1: #FB923C; --w1-soft: #3A2114; --w2: #FBBF24; --w2-soft: #3A2E10; --w3: #60A5FA; --w3-soft: #16264A; --w4: #2DD4BF; --w4-soft: #10302C; --w5: #F472B6; --w5-soft: #3A1426;
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #17121F; --paper: #221B2E; --ink: #F3EEF8; --muted: #B5AAC6; --line: #3A3049; --soft: #2C2340;
+  --good: #4ADE80; --good-bg: #14321F; --bad: #F87171; --bad-bg: #3B1717; --sun: #FACC15;
+  --w1: #FB923C; --w1-soft: #3A2114; --w2: #FBBF24; --w2-soft: #3A2E10; --w3: #60A5FA; --w3-soft: #16264A; --w4: #2DD4BF; --w4-soft: #10302C; --w5: #F472B6; --w5-soft: #3A1426;
+  color-scheme: dark; }
+body[data-week="1"] { --accent: var(--w1); --accent-soft: var(--w1-soft); }
+body[data-week="2"] { --accent: var(--w2); --accent-soft: var(--w2-soft); }
+body[data-week="3"] { --accent: var(--w3); --accent-soft: var(--w3-soft); }
+body[data-week="4"] { --accent: var(--w4); --accent-soft: var(--w4-soft); }
+body[data-week="5"] { --accent: var(--w5); --accent-soft: var(--w5-soft); }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 18px; line-height: 1.5; padding-inline: 16px; padding-block: 0 48px; }
+.wrap { max-width: 1040px; margin: 0 auto; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; }
+
+/* top */
+.top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding-block: 20px 12px; }
+.brand { display: flex; align-items: center; gap: 12px; }
+.flower { width: 44px; height: 44px; flex: none; }
+.brand small { display: block; font-family: var(--display); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: 13px; color: var(--muted); }
+.brand b { font-family: var(--display); font-size: 26px; font-weight: 700; }
+.picker { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.topnav { display: flex; gap: 8px; flex-wrap: wrap; }
+.navbtn { padding: 12px 22px; font-size: 18px; text-decoration: none; display: inline-flex; align-items: center; min-height: 48px; }
+body.home .picker { display: none; }
+.picker label.series { display: none !important; }
+.hfind { display: grid; gap: 10px; margin: 0 0 8px; }
+#hsearch { font: inherit; font-size: 18px; padding: 12px 16px; border: 2px solid var(--line); border-radius: 14px; background: var(--paper); color: var(--ink); width: 100%; }
+.hjump { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; }
+.hchip { flex: none; border: 2px solid var(--line); background: var(--paper); border-radius: 999px; padding: 6px 14px; font-family: var(--display); font-weight: 600; font-size: 15px; min-height: 40px; }
+.hchip:hover { border-color: var(--accent); }
+.hgroup { margin-top: 14px; scroll-margin-top: 12px; }
+.hgroup > summary { display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; padding: 10px 4px; list-style: none; }
+.hgroup > summary::-webkit-details-marker { display: none; }
+.hgroup > summary::before { content: "▸"; color: var(--muted); font-size: 18px; transition: transform .15s; }
+.hgroup[open] > summary::before { transform: rotate(90deg); }
+.hgroup > summary .hseries { margin: 0 auto 0 0; }
+.hcount { font-size: 14px; color: var(--muted); }
+.hgo { font-family: var(--display); font-size: 24px; color: var(--muted); }
+.hnone { color: var(--muted); font-size: 18px; margin-top: 18px; }
+.hintro { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+.series { display: flex; align-items: center; gap: 8px; font-family: var(--display); font-weight: 600; font-size: 15px; color: var(--muted); }
+.series select { font: inherit; font-size: 17px; color: var(--ink); background: var(--paper); border: 2px solid var(--line); border-radius: 12px; padding: 7px 12px; }
+.weeks { display: flex; gap: 8px; flex-wrap: wrap; }
+.weekbtn { border: 2px solid var(--line); background: var(--paper); border-radius: 999px; padding: 8px 16px; font-family: var(--display); font-weight: 600; font-size: 16px; display: flex; gap: 8px; align-items: center; }
+.weekbtn .n { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--soft); font-size: 14px; }
+.weekbtn[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--paper); }
+.weekbtn[aria-pressed="true"] .n { background: var(--paper); color: var(--accent); }
+
+/* hero */
+.hero { background: var(--accent-soft); border-radius: 28px; padding: 28px clamp(20px, 4vw, 40px); display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center; margin-block: 8px 18px; }
+.hero .big { font-size: clamp(56px, 9vw, 96px); line-height: 1; }
+.hero .ref { font-family: var(--display); font-weight: 600; color: var(--accent); letter-spacing: .06em; text-transform: uppercase; font-size: 15px; }
+.hero h1 { font-size: clamp(30px, 5vw, 50px); line-height: 1.05; margin-block: 4px 10px; }
+.hero p { margin: 0; font-size: 19px; }
+.hero p strong { font-family: var(--display); }
+
+.printables { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.dl { display: inline-flex; align-items: center; gap: 8px; border: 2px solid var(--accent); background: var(--paper); color: var(--ink); border-radius: 12px; padding: 8px 14px; font-family: var(--display); font-weight: 600; font-size: 16px; text-decoration: none; cursor: pointer; }
+.dl small { font-family: var(--body); font-weight: 700; font-size: 12px; color: var(--accent); letter-spacing: .06em; }
+.dl:hover { background: var(--accent-soft); }
+.dlmsg { font-size: 14px; color: var(--muted); align-self: center; }
+/* section tabs */
+.tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 18px; scrollbar-width: thin; }
+.tab { flex: none; border: 0; background: transparent; padding: 10px 16px; border-radius: 14px; font-family: var(--display); font-weight: 600; font-size: 17px; color: var(--muted); }
+.tab[aria-selected="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 0 0 2px var(--accent) inset; }
+.tab:hover { color: var(--ink); }
+
+.panel { background: var(--paper); border: 2px solid var(--line); border-radius: 28px; padding: clamp(20px, 4vw, 40px); min-height: 440px; }
+.panel h2 { font-size: clamp(26px, 4vw, 36px); margin-bottom: 6px; }
+.lead { color: var(--muted); margin: 0 0 22px; }
+
+.nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+.btn { border: 0; border-radius: 16px; padding: 14px 24px; font-family: var(--display); font-weight: 600; font-size: 19px; background: var(--accent); color: var(--paper); }
+.btn.ghost { background: var(--soft); color: var(--ink); }
+.btn:disabled { opacity: .35; cursor: default; }
+.dots { display: flex; gap: 8px; }
+.dot { width: 14px; height: 14px; border-radius: 50%; background: var(--line); border: 0; padding: 0; }
+.dot[aria-current="true"] { background: var(--accent); transform: scale(1.25); }
+
+/* story */
+.scene { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 32px; align-items: center; }
+.scene .art { aspect-ratio: 1; max-width: 100%; border-radius: 32px; background: var(--accent-soft); display: grid; place-items: center; font-size: clamp(80px, 14vw, 130px); }
+.scene .step { font-family: var(--display); font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: .08em; font-size: 15px; }
+.scene h3 { font-size: clamp(28px, 4vw, 40px); margin-block: 4px 12px; }
+.scene p { font-size: clamp(20px, 2.4vw, 25px); line-height: 1.5; margin: 0; max-width: 34ch; }
+.scene.recap { align-items: start; }
+.scene.recap ul { margin: 0; padding-left: 1.2em; display: grid; gap: 10px; font-size: clamp(18px, 2.1vw, 22px); line-height: 1.45; max-width: 46ch; }
+.scene.recap li::marker { color: var(--accent); }
+@keyframes pop { from { transform: scale(.92); opacity: .4; } to { transform: none; opacity: 1; } }
+.anim { animation: pop .35s ease-out; }
+
+/* verse */
+.verse-target { min-height: 120px; border: 3px dashed var(--line); border-radius: 22px; padding: 18px; display: flex; flex-wrap: wrap; gap: 10px; align-content: flex-start; margin-bottom: 18px; }
+.verse-target.done { border-style: solid; border-color: var(--good); background: var(--good-bg); }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip { border: 2px solid var(--accent); background: var(--accent-soft); border-radius: 14px; padding: 10px 16px; font-family: var(--display); font-weight: 600; font-size: 22px; }
+.chip.placed { background: var(--paper); }
+.chip.wrong { animation: shake .3s; border-color: var(--bad); }
+@keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+.verse-full { font-family: var(--display); font-size: clamp(24px, 3.4vw, 34px); line-height: 1.35; font-weight: 500; }
+.verse-full .gap { display: inline-block; min-width: 3.2ch; border-bottom: 4px solid var(--accent); color: transparent; margin: 0 .1em; cursor: pointer; }
+.verse-full .gap.show { color: var(--accent); }
+.mode { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+.status { font-family: var(--display); font-weight: 600; font-size: 20px; min-height: 1.5em; margin-top: 14px; }
+.status.good { color: var(--good); }
+
+/* quiz */
+.qcount { font-family: var(--display); font-weight: 600; color: var(--accent); letter-spacing: .06em; text-transform: uppercase; font-size: 15px; }
+.question { font-size: clamp(24px, 3.4vw, 34px); font-family: var(--display); font-weight: 600; line-height: 1.25; margin-block: 8px 22px; }
+.opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.opt { text-align: left; border: 2px solid var(--line); background: var(--paper); border-radius: 18px; padding: 16px 18px; font-size: 21px; display: flex; gap: 12px; align-items: center; }
+.opt .letter { flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--soft); font-family: var(--display); font-weight: 700; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt.right { border-color: var(--good); background: var(--good-bg); }
+.opt.right .letter { background: var(--good); color: var(--paper); }
+.opt.wrongpick { border-color: var(--bad); background: var(--bad-bg); }
+.opt:disabled { cursor: default; }
+.feedback { font-family: var(--display); font-weight: 600; font-size: 22px; min-height: 1.6em; margin-top: 16px; }
+.feedback.good { color: var(--good); } .feedback.bad { color: var(--bad); }
+.tfbtns { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.tfbtn { border: 3px solid var(--line); border-radius: 22px; padding: 26px 10px; font-family: var(--display); font-weight: 700; font-size: clamp(26px, 4vw, 36px); background: var(--paper); }
+.tfbtn.right { border-color: var(--good); background: var(--good-bg); color: var(--good); }
+.tfbtn.wrongpick { border-color: var(--bad); background: var(--bad-bg); color: var(--bad); }
+.score { text-align: center; padding-block: 30px; }
+.score .num { font-family: var(--display); font-size: 84px; font-weight: 700; color: var(--accent); line-height: 1; }
+.score p { font-size: 22px; }
+
+/* crossword */
+.cw-layout { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 32px; align-items: start; }
+.cw-scroll { overflow-x: auto; max-width: 100%; }
+.cw { display: grid; gap: 3px; }
+.cell { position: relative; width: 44px; height: 44px; }
+.cell input { width: 100%; height: 100%; border: 2px solid var(--ink); border-radius: 6px; text-align: center; font-family: var(--display); font-weight: 700; font-size: 22px; text-transform: uppercase; background: var(--paper); color: var(--ink); padding: 0; caret-color: var(--accent); }
+.cell input.hl { background: var(--accent-soft); }
+.cell input.ok { background: var(--good-bg); border-color: var(--good); }
+.cell input.no { background: var(--bad-bg); border-color: var(--bad); }
+.cell .num { position: absolute; top: 2px; left: 4px; font-size: 11px; font-weight: 700; color: var(--accent); pointer-events: none; }
+.clues h3 { font-size: 20px; color: var(--accent); margin-block: 0 8px; }
+.clues ol { list-style: none; padding: 0; margin: 0 0 18px; display: grid; gap: 4px; }
+.clue { border: 0; background: transparent; text-align: left; padding: 6px 10px; border-radius: 10px; font-size: 18px; width: 100%; }
+.clue b { font-family: var(--display); color: var(--accent); margin-right: 6px; }
+.clue.active { background: var(--accent-soft); }
+.clue.solved { color: var(--muted); text-decoration: line-through; }
+.row-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+/* word search */
+.ws-layout { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 32px; align-items: start; }
+.ws { display: grid; gap: 4px; user-select: none; }
+.ws button { width: 42px; height: 42px; border: 0; border-radius: 10px; background: var(--soft); font-family: var(--display); font-weight: 700; font-size: 21px; padding: 0; }
+.ws button.sel { background: var(--accent); color: var(--paper); }
+.ws button.found { background: var(--sun); color: #2A1F3D; }
+.wordlist { display: flex; flex-wrap: wrap; gap: 8px; }
+.wordlist span { font-family: var(--display); font-weight: 600; font-size: 19px; padding: 6px 14px; border-radius: 999px; background: var(--soft); }
+.wordlist span.found { background: var(--sun); color: #2A1F3D; text-decoration: line-through; }
+
+/* talk */
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.flip { border: 2px solid var(--line); background: var(--paper); border-radius: 22px; padding: 22px; text-align: left; min-height: 150px; display: flex; flex-direction: column; gap: 8px; }
+.flip .lbl { font-family: var(--display); font-weight: 600; color: var(--accent); font-size: 15px; letter-spacing: .06em; text-transform: uppercase; }
+.flip .q { font-size: 21px; font-family: var(--display); font-weight: 500; line-height: 1.3; }
+.flip.hide .q { filter: blur(9px); }
+.flip.star { border-color: var(--sun); }
+.sub { font-size: 22px; margin-block: 30px 12px; }
+.games { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.game { background: var(--accent-soft); border-radius: 22px; padding: 20px; }
+.game h3 { font-size: 21px; margin-bottom: 6px; }
+.game p { margin: 0; font-size: 17px; }
+.links { display: grid; gap: 8px; padding: 0; list-style: none; margin: 0; }
+.links a { color: var(--accent); font-weight: 700; }
+.prayer { margin-top: 26px; padding: 22px; border-radius: 22px; background: var(--soft); font-style: italic; font-size: 20px; }
+.prayer b { font-style: normal; font-family: var(--display); display: block; margin-bottom: 6px; color: var(--accent); }
+
+@media (max-width: 760px) {
+  body { font-size: 16px; }
+  .hero { grid-template-columns: 1fr; gap: 8px; }
+  .scene { grid-template-columns: 1fr; gap: 16px; }
+  .scene .art { max-width: 180px; }
+  .opts, .cards, .games { grid-template-columns: 1fr; }
+  .cw-layout, .ws-layout { grid-template-columns: minmax(0, 1fr); }
+  .cell { width: 30px; height: 30px; } .cell input { font-size: 16px; }
+  .ws button { width: 28px; height: 28px; font-size: 15px; border-radius: 6px; }
+}
+@media (prefers-reduced-motion: reduce) { .anim, .chip.wrong { animation: none; } .dot[aria-current="true"] { transform: none; } }
+/* add a lesson */
+.addbtn { border: 2px dashed var(--accent); background: var(--paper); color: var(--accent); border-radius: 999px; padding: 8px 16px; font-family: var(--display); font-weight: 600; font-size: 16px; min-height: 44px; }
+.addbtn:hover { background: var(--accent-soft); }
+.mine { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; align-items: center; }
+.tag { font-family: var(--display); font-weight: 600; font-size: 13px; padding: 4px 10px; border-radius: 999px; background: var(--paper); color: var(--muted); border: 1px solid var(--line); }
+.minibtn { border: 2px solid var(--line); background: var(--paper); border-radius: 12px; padding: 6px 12px; font-family: var(--display); font-weight: 600; font-size: 15px; min-height: 40px; }
+.minibtn:hover { border-color: var(--accent); }
+dialog.add { width: min(860px, calc(100vw - 20px)); max-height: calc(100dvh - 20px); border: 0; border-radius: 24px; padding: 0; background: var(--bg); color: var(--ink); }
+dialog.add::backdrop { background: rgba(20, 12, 30, .55); }
+.add form { padding: clamp(16px, 3vw, 32px); display: grid; gap: 16px; }
+.add .head { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
+.add h2 { font-size: 32px; margin-bottom: 4px; }
+.x { border: 0; background: var(--soft); border-radius: 50%; width: 44px; height: 44px; font-size: 20px; flex: none; }
+.fs { background: var(--paper); border: 2px solid var(--line); border-radius: 18px; padding: 14px 18px; margin: 0; min-width: 0; }
+.fs legend, .fs > summary { font-family: var(--display); font-weight: 600; font-size: 20px; padding: 0 4px; }
+fieldset.fs legend { margin-bottom: 4px; }
+.fs > summary { cursor: pointer; min-height: 32px; }
+.fs > summary small { font-family: var(--body); font-weight: 400; font-size: 14px; color: var(--muted); margin-left: 6px; }
+.fs[open] > summary { margin-bottom: 12px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.fld { display: grid; gap: 4px; font-size: 15px; font-weight: 700; min-width: 0; }
+.fld small { font-weight: 400; color: var(--muted); }
+.fld.inline { grid-template-columns: auto 90px; align-items: center; justify-content: start; gap: 10px; }
+.add input, .add textarea, .add select { font: inherit; font-size: 16px; font-weight: 400; color: var(--ink); background: var(--bg); border: 2px solid var(--line); border-radius: 10px; padding: 9px 11px; width: 100%; min-height: 44px; min-width: 0; }
+.add textarea { min-height: 84px; resize: vertical; }
+.rows { display: grid; gap: 10px; }
+.row { display: grid; gap: 8px; align-items: start; padding: 10px; border-radius: 12px; background: var(--soft); min-width: 0; }
+.row.story { grid-template-columns: 72px minmax(0, 1fr); }
+.row.story textarea { grid-column: 1 / -1; min-height: 64px; }
+.row.pair { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
+.row.tf { grid-template-columns: minmax(0, 1fr) 110px; }
+.row.mc .opts4 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.addrow { justify-self: start; margin-top: 10px; border: 2px dashed var(--line); background: transparent; border-radius: 12px; padding: 8px 14px; font-family: var(--display); font-weight: 600; font-size: 16px; min-height: 44px; }
+.addrow:hover { border-color: var(--accent); }
+.hint { color: var(--muted); font-size: 15px; margin: 0; }
+.foot { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: flex-end; position: sticky; bottom: calc(-1 * clamp(16px, 3vw, 32px)); background: var(--bg); padding-block: 12px; }
+.foot .msg { margin-right: auto; font-size: 15px; font-weight: 700; color: var(--muted); }
+.foot .msg.bad { color: var(--bad); }
+.empty { color: var(--muted); font-size: 19px; }
+/* lesson list home */
+body.home #hero, body.home #tabs, body.home #panel, body.home label.series, body.home #weeks, body.home #allBtn { display: none !important; }
+#homeView { padding-bottom: 20px; }
+.hintro { background: var(--accent-soft); border-radius: 28px; padding: 24px clamp(20px, 4vw, 40px); margin: 8px 0 20px; }
+.hintro h1 { font-size: clamp(30px, 5vw, 46px); line-height: 1.05; }
+.hintro p { margin: 6px 0 0; }
+.hseries { margin: 22px 0 10px; font-family: var(--display); font-weight: 600; font-size: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.hlist { display: grid; gap: 12px; }
+.hitem { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; gap: 16px; align-items: center; background: var(--paper); border: 2px solid var(--line); border-radius: 22px; padding: 14px 18px; cursor: pointer; }
+.hitem:hover { border-color: var(--accent); }
+.hitem .em { font-size: 44px; text-align: center; }
+.hitem .ref { font-family: var(--display); font-weight: 600; font-size: 14px; color: var(--muted); letter-spacing: .04em; }
+.hitem h3 { font-size: 22px; }
+.hitem p { margin: 2px 0 0; font-size: 17px; }
+.hdone { display: flex; align-items: center; gap: 6px; font-family: var(--display); font-weight: 600; font-size: 15px; color: var(--muted); background: none; border: 2px solid var(--line); border-radius: 12px; padding: 6px 12px; min-height: 40px; white-space: nowrap; }
+.hdone[aria-pressed="true"] { border-color: var(--good); color: var(--good); background: var(--good-bg); }
+.hnote { color: var(--muted); font-size: 14px; margin-top: 14px; }
+@media (max-width: 600px) { .hitem { grid-template-columns: 48px minmax(0, 1fr); } .hitem .em { font-size: 34px; } .hdone { grid-column: 1 / -1; justify-self: start; } }
+.fs[hidden] { display: none !important; }
+.fs > summary { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.fs > summary .sumtxt { margin-right: auto; }
+.secdel { border: 0; background: var(--soft); color: var(--muted); border-radius: 10px; padding: 6px 12px; font-family: var(--display); font-weight: 600; font-size: 14px; min-height: 36px; }
+.secdel:hover { color: var(--bad); background: var(--bad-bg); }
+.row { position: relative; padding-right: 48px; }
+.rowdel { position: absolute; top: 10px; right: 8px; width: 34px; height: 34px; border: 0; border-radius: 50%; background: var(--paper); color: var(--muted); font-size: 15px; padding: 0; }
+.rowdel:hover { color: var(--bad); background: var(--bad-bg); }
+.secbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.secbar .addrow { margin-top: 0; }
+.secbar[hidden] { display: none; }
+@media (max-width: 600px) { .grid2, .row.pair, .row.mc .opts4 { grid-template-columns: minmax(0, 1fr); } .fs { padding: 12px; } }
+.tbox{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:14px}.tbtn{display:inline-flex;align-items:center;min-height:44px;padding:8px 18px;border-radius:999px;background:#15803d;color:#fff;font:600 16px var(--display,inherit);text-decoration:none}button.tbtn{border:0;cursor:pointer;font-family:inherit}.tbtn:disabled{opacity:.7}.tbtn:hover{filter:brightness(1.08)}.tbtn.done{background:#166534}.tnote{font-size:14px;color:var(--muted)}.tbadge{display:inline-block;font:600 13px var(--display,inherit);padding:4px 12px;border-radius:999px;background:#dcfce7;color:#166534;white-space:nowrap}:root[data-theme=dark] .tbadge{background:#14532d;color:#bbf7d0}
+.hside{display:flex;align-items:center;gap:10px}</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg class="flower" viewBox="0 0 44 44" aria-hidden="true">
+        <g fill="var(--accent)"><circle cx="22" cy="10" r="8"/><circle cx="33.4" cy="18.3" r="8"/><circle cx="29" cy="31.7" r="8"/><circle cx="15" cy="31.7" r="8"/><circle cx="10.6" cy="18.3" r="8"/></g>
+        <circle cx="22" cy="22" r="7" fill="var(--sun)"/>
+      </svg>
+      <div><small>Sunday School · Ages 6-13</small><b id="brandname">Bloomers</b></div>
+    </div>
+    <div class="topnav"><a class="btn ghost navbtn" href="index.html" target="_self">🏠 Sunday School</a><button class="btn ghost navbtn" id="allBtn" type="button">← All lessons</button></div>
+  </header>
+  <div class="picker"><label class="series" for="series">Series <select id="series"></select></label><nav class="weeks" id="weeks" aria-label="Choose the week"></nav></div>
+
+  <section id="homeView" hidden></section>
+  <section class="hero" id="hero"></section>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <main class="panel" id="panel"></main>
+</div>
+<dialog class="add" id="addDlg" aria-labelledby="addTitle"><form id="addForm" novalidate></form></dialog>
+
+<script src="taught.js"></script>
+<script>
+const TFORM="https://docs.google.com/forms/d/e/1FAIpQLSfIBJ1sXmvImWeF5XjNUVK7eR9x6xhMcaYXlVSv8DHYiyRwIQ/formResponse";const TCLS="Bloomers";
+
+function tKey(s,w){return s.id+"-w"+w.id}
+function tUrl(s,w){return TFORM+"?entry.2009767917="+encodeURIComponent(TCLS)+"&entry.749423249="+encodeURIComponent(s.name+" · Week "+w.id+" · "+w.title+" ["+tKey(s,w)+"]")+"&submit=Submit"}
+function tSent(){try{return JSON.parse(localStorage.getItem("folah-taught-sent")||"{}")}catch(e){return {}}}
+function tFmt(d){const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(d||"");return m?["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m[2]-1]+" "+(+m[3]):""}
+function tToday(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function tOn(s,w){const t=((window.TAUGHT||{})[TCLS]||{})[tKey(s,w)];return typeof t==="string"?t:""}
+function tBadge(s,w){return tOn(s,w)||tSent()[tKey(s,w)]?`<span class="tbadge">✓ Done</span>`:""}
+function tEsc(x){return String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function tButton(s,w){const k=tKey(s,w),mine=tSent()[k];return `<div class="tbox"><button type="button" class="tbtn${mine?" done":""}" data-tkey="${k}" data-tlabel="${tEsc(s.name+" · Week "+w.id+" · "+w.title+" ["+k+"]")}">${mine?"✓ Done":"✓ Mark as done"}</button><span class="tnote" aria-live="polite">${tOn(s,w)?"Last taught "+tFmt(tOn(s,w)):""}</span></div>`}
+document.addEventListener("click",e=>{const a=e.target.closest&&e.target.closest("button.tbtn");if(!a||a.disabled)return;a.disabled=true;a.textContent="Saving…";const n=a.parentNode.querySelector(".tnote");const body=new URLSearchParams({"entry.2009767917":TCLS,"entry.749423249":a.dataset.tlabel});fetch(TFORM,{method:"POST",mode:"no-cors",body}).then(()=>{const s=tSent();s[a.dataset.tkey]=tToday();try{localStorage.setItem("folah-taught-sent",JSON.stringify(s))}catch(_){}a.textContent="✓ Done";a.classList.add("done");if(n)n.textContent="Saved. All teachers will see this lesson as Done."}).catch(()=>{a.textContent="✓ Mark as done";if(n)n.textContent="Couldn't save. Check the internet connection and try again."}).finally(()=>{a.disabled=false})});
+function tParse(t){const rows=[];let r=[],f="",q=false;for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c=='"'){if(t[i+1]=='"'){f+='"';i++}else q=false}else f+=c}else if(c=='"')q=true;else if(c==","){r.push(f);f=""}else if(c=="\n"||c=="\r"){if(c=="\r"&&t[i+1]=="\n")i++;r.push(f);rows.push(r);r=[];f=""}else f+=c}if(f||r.length){r.push(f);rows.push(r)}return rows}
+function tLoad(){fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vR4cYcZnDHHFgFZsrfBzCw0LdCCtG51aVl-gYTNF9tX9miDG6sBqKb4Lz6bOZmZSGHueATgKdGoFVO4/pub?output=csv&t="+Date.now()).then(r=>r.ok?r.text():Promise.reject()).then(t=>{const T={};tParse(t).slice(1).forEach(([ts,cls,les])=>{const m=/\[([a-z0-9-]+)\]\s*$/.exec(les||""),d=/^(\d{1,2})\/(\d{1,2})\/(\d{4})/.exec(ts||"");if(!m||!d||!cls)return;const iso=d[3]+"-"+d[1].padStart(2,"0")+"-"+d[2].padStart(2,"0");(T[cls]=T[cls]||{});if(!T[cls][m[1]]||T[cls][m[1]]<iso)T[cls][m[1]]=iso});window.TAUGHT=T;try{window.tRefresh&&window.tRefresh()}catch(_){}}).catch(()=>{})}
+tLoad();
+
+const SERIES=[{"id": "thanksgiving", "name": "Thanksgiving", "weeks": [{"id": 1, "short": "Thanksgiving", "title": "Give Thanks to the Lord!", "ref": "Exodus 15 to John 6", "emoji": "🌾", "bigIdea": "When we thank God for what we have, even a little, he can do big things with it.", "verse": "Give thanks to the LORD, for he is good; his love endures forever.", "verseRef": "Psalm 107:1", "story": [["🌊", "A song by the sea", "God opened a path through the Red Sea, and his people walked across on dry ground. Safe on the other side, Moses and the people sang a thank-you song to God. Miriam played her tambourine and all the women danced! (Exodus 15)"], ["🌾", "Harvest parties", "God told his people to have big thank-you festivals every year. At harvest time they brought the first and best of their crops to God, camped in leafy shelters, and celebrated for seven days. (Exodus 23, Leviticus 23)"], ["🎺", "David's song of thanks", "When King David brought the ark of God home to Jerusalem, there was music, trumpets and singing. David gave everyone bread, dates and raisins, and sang, \"Give thanks to the LORD, for he is good!\" (1 Chronicles 16)"], ["🙌", "One came back", "Ten men with a skin sickness called out, \"Jesus, have pity on us!\" Jesus healed all ten. But only one came back, shouting praise to God. He bowed at Jesus' feet and said thank you. Jesus asked, \"Where are the other nine?\" (Luke 17)"], ["🧺", "A boy's small lunch", "Thousands of hungry people came to hear Jesus. A boy had five small loaves and two small fish. It looked like nothing for so many! Jesus took the bread and gave thanks to God. (John 6)"], ["✨", "Thanks, then more!", "After Jesus gave thanks, the food kept going and going. About 5,000 men, plus women and children, ate until they were full. Then the disciples filled twelve baskets with leftovers! A little, given with thanks, became a lot. (John 6)"]], "storyNote": "Scene 1: say gently that the sea closed and the army could no longer chase God's people. Older kids may ask what happened to the Egyptians (Exodus 14:28); answer simply that God rescued his people from danger. Scene 4: the men had a sickness called leprosy that made people keep away from them. For the big idea, be careful not to teach that saying thanks is a magic trick for getting more. Thankful hearts trust God, and God loves to bless and use what we give him. Bonus examples for older kids: Jesus gave thanks before feeding 4,000 (Matthew 15:36) and before raising Lazarus (John 11:41).", "discussion": ["Moses and Miriam sang right after God rescued them. What has God done for you that you could sing about?", "Ten men were healed, but only one came back. Why do you think the other nine forgot to say thank you?", "The boy's lunch was small, but Jesus gave thanks for it. What happened next?", "Name three things you can thank God for right now, even small things."], "challenge": ["God made thanksgiving a yearly festival for his people. Why do you think he wanted them to remember to say thanks on purpose?", "Read 1 Thessalonians 5:18. Does it say to give thanks only when things are good? What does that mean for a hard day?", "Jesus gave thanks before the food multiplied, not after. What does that show about trusting God?"], "mc": [["Who played a tambourine after crossing the Red Sea?", ["Sarah", "Miriam", "Ruth", "Esther"], 1], ["What did God's people bring to him at harvest time?", ["Gold coins", "The first and best of their crops", "New clothes", "Toys"], 1], ["What did King David give to the people when the ark came home?", ["Bread, dates and raisins", "Swords", "Sheep", "Nothing"], 0], ["How many healed men came back to thank Jesus?", ["None", "One", "Five", "All ten"], 1], ["What did Jesus do with the boy's loaves before he shared them?", ["Hid them", "Sold them", "Gave thanks to God", "Threw them away"], 2], ["How many baskets of leftovers were there?", ["Two", "Five", "Seven", "Twelve"], 3]], "tf": [["After crossing the Red Sea, the people sang a song to God.", true], ["God told his people to celebrate harvest festivals every year.", true], ["King David was grumpy when the ark came to Jerusalem.", false], ["All ten healed men came back to say thank you.", false], ["The boy had five loaves and two fish.", true], ["Jesus gave thanks before the food was shared.", true]], "games": [["Miriam's Praise Parade", "Kids march around the room with shakers, tambourines or clapping hands. When the leader stops the music, call out one child to shout one thing they thank God for, then the parade starts again."], ["Where Are the Nine?", "Before class, hide nine paper people around the room. Keep the tenth one with you, holding a THANK YOU sign. Kids find all nine and bring them back to \"say thank you\" to Jesus. Ask: why is it easy to forget to say thanks?"], ["Thankful Blob Tag", "One child is \"it.\" When someone is tagged, they say one thing they are thankful for and join hands with the tagger. The blob keeps growing until everyone is in it. Point out how thanks multiplied, just like the bread!"]], "craft": {"name": "Thank You Tambourine", "supplies": ["Two paper plates per child", "Dried beans, rice or small jingle bells (a spoonful each)", "Stapler and tape", "Markers, crayons, stickers, ribbon or crepe paper streamers"], "steps": ["Kids decorate the back of both plates and write GIVE THANKS! on one plate.", "On the other plate, write or draw three things they thank God for.", "Put a spoonful of beans or bells on one plate, place the second plate on top, and staple all the way around close together (leaders help the little ones). Cover with tape so nothing spills.", "Tape ribbons around the edge. Shake your tambourine and say the memory verse together, like Miriam!"]}, "links": [["Jesus Heals 10 Lepers lesson with printable PDF, crafts and coloring pages", "https://ministry-to-children.com/?p=53567"], ["Ten Lepers lesson with puppet crafts and a \"Thank You\" book", "https://daniellesplace.com/html/rr_samplelepers.html"], ["Thanksgiving Bible verse coloring sheets (includes Psalm 107:1)", "https://www.abcjesuslovesme.com/ideas/thanksgiving-bible-verse-printables"], ["Turkey Time crafts for Sunday school (leaf wreath and more)", "https://ministry-to-children.com/thanksgiving-turkey-crafts/"]], "drawPrompt": "Draw something God has given you that you want to thank him for. Draw yourself saying thank you!", "prayer": "Dear God, thank you for being so good to me. Thank you for my family, my food, my friends and for Jesus. Help me remember to say thank you every day, like the one man who came back. Take the little I have and use it for big things. In Jesus' name, Amen.", "crossword": {"rows": 11, "cols": 7, "words": [{"word": "MIRIAM", "clue": "She played a tambourine and danced by the sea", "r": 3, "c": 0, "d": "A", "n": 3}, {"word": "ONE", "clue": "How many came back to say thank you?", "r": 6, "c": 2, "d": "A", "n": 7}, {"word": "SEA", "clue": "God made a path through the Red ___", "r": 7, "c": 0, "d": "A", "n": 8}, {"word": "TEN", "clue": "How many sick men did Jesus heal?", "r": 8, "c": 4, "d": "A", "n": 9}, {"word": "BASKETS", "clue": "Twelve ___ of leftovers were picked up", "r": 10, "c": 0, "d": "A", "n": 10}, {"word": "DAVID", "clue": "The king who sang \"Give thanks to the LORD\"", "r": 0, "c": 1, "d": "D", "n": 1}, {"word": "HARVEST", "clue": "Time when crops are gathered in from the fields", "r": 2, "c": 4, "d": "D", "n": 2}, {"word": "FISH", "clue": "The boy also had two small ___", "r": 5, "c": 0, "d": "D", "n": 4}, {"word": "LOAVES", "clue": "The boy had five small ___ of bread", "r": 5, "c": 2, "d": "D", "n": 5}, {"word": "THANKS", "clue": "Jesus looked up and gave ___", "r": 5, "c": 6, "d": "D", "n": 6}]}, "wordsearch": {"grid": ["TJOCUMKTHJF", "GFFBDAVIDUW", "IPCECWESING", "HEBCAYSWMYR", "AFIPRSHTGBW", "RITRNTTHSRI", "VSOAPWVAYEL", "EHCIKUDNPAA", "STVSKGHKADI", "TDYEHLFSTEN", "KNBDEYHBTVS"], "words": ["THANKS", "PRAISE", "SING", "SEA", "FEAST", "HARVEST", "DAVID", "TEN", "BREAD", "FISH"], "locs": {"HARVEST": [3, 0, 1, 0], "THANKS": [4, 7, 1, 0], "PRAISE": [4, 3, 1, 0], "FEAST": [1, 2, 1, 1], "DAVID": [1, 4, 0, 1], "BREAD": [4, 9, 1, 0], "SING": [2, 7, 0, 1], "FISH": [4, 1, 1, 0], "SEA": [5, 8, 1, 1], "TEN": [9, 8, 0, 1]}}, "files": [["🖨️ Kids' handout", "PDF", "files/thanksgiving/week1-kids-handout.pdf", "Bloomers Thanksgiving Week 1 Kids Handout.pdf"], ["📄 Leader guide + activity pages", "PDF", "files/thanksgiving/week1-leader-guide.pdf", "Bloomers Thanksgiving Week 1 Leader Guide.pdf"]]}]}, {"id": "matthew-14", "name": "Matthew 14", "weeks": [{"id": 1, "short": "John the Baptist", "title": "John the Baptist Stands for the Truth", "ref": "Matthew 14:1-12", "emoji": "📜", "bigIdea": "Standing for what is right can be costly. God honors people who stay faithful to him.", "verse": "Be strong and courageous... for the LORD your God will be with you wherever you go.", "verseRef": "Joshua 1:9", "story": [["👑", "Herod's guilty conscience", "Herod Antipas ruled Galilee for the Romans. When he heard about the miracles Jesus was doing, he panicked and told his servants, \"This is John the Baptist, risen from the dead!\" To understand why, we need to go back in time."], ["📣", "John speaks the truth", "Herod had married Herodias, the wife of his own brother Philip. God's law said this was wrong, and John the Baptist told Herod so to his face: \"It is not lawful for you to have her.\""], ["⛓️", "Arrested for the truth", "Herod had John arrested, tied up and thrown into prison. He wanted John dead, but he was afraid of the people, because they believed John was a prophet sent by God."], ["🎂", "A dangerous promise", "At Herod's birthday banquet, Herodias' daughter danced for the guests. Herod was so pleased that he swore an oath in front of everyone: he would give her whatever she asked."], ["😢", "A terrible request", "Her mother told her what to ask for: the death of John the Baptist. Herod was upset, but he did not want to look weak in front of his guests. He kept his foolish promise, and John was put to death in prison."], ["🙏", "John's friends go to Jesus", "John's disciples came, took his body and buried it. Then they went and told Jesus. John had finished the job God gave him. Right to the end, he pointed people to Jesus."]], "discussion": ["Why do you think John was willing to tell a king he was wrong, knowing it could get him in trouble?", "Herod knew killing John was wrong, but he did it anyway to save face. Why do people sometimes do wrong things because of what others will think?", "Where might you need courage to stand for what is right: at school, online, or with friends?", "When John's disciples were heartbroken, they went to Jesus. What can we do when we are sad or hurting?"], "challenge": ["Herod was the most powerful man in the room, but who really had courage? Explain your answer.", "Herod kept a bad promise to protect his reputation. Is it ever right to break a promise? What should he have done?", "Read Matthew 14:13. How did Jesus respond to the news about John? What does that teach us about grief?"], "mc": [["Why did Herod think Jesus was John the Baptist?", ["They looked alike", "His guilty conscience about killing John", "John's disciples told him so", "An angel told him"], 1], ["Why was John put in prison?", ["He refused to pay taxes", "He told Herod his marriage broke God's law", "He led a rebellion", "He stole from the temple"], 1], ["Why didn't Herod kill John right away?", ["He was afraid of the people", "He enjoyed John's preaching", "The Romans would not allow it", "He forgot about him"], 0], ["What did Herod promise at his birthday banquet?", ["A palace", "Whatever the girl asked for", "Freedom for John", "A seat on his council"], 1], ["Why did Herod keep his promise even though he was upset?", ["He wanted to please God", "He did not want to look weak in front of his guests", "The law required it", "John asked him to"], 1], ["What did John's disciples do after burying him?", ["Went into hiding", "Went and told Jesus", "Left Israel", "Started a protest"], 1]], "tf": [["Herod heard about Jesus and thought John had come back from the dead.", true], ["John was afraid to tell Herod the truth.", false], ["The people believed John was a prophet.", true], ["Herod swore an oath in front of his guests.", true], ["Herod was glad when the girl made her request.", false], ["John's disciples went and told Jesus what happened.", true]], "crossword": {"rows": 11, "cols": 10, "words": [{"word": "BURIED", "clue": "John's disciples took his body and ___ it", "r": 1, "c": 0, "d": "A", "n": 3}, {"word": "PRISON", "clue": "Where John was locked up", "r": 4, "c": 4, "d": "A", "n": 5}, {"word": "HEROD", "clue": "The ruler who put John in prison", "r": 6, "c": 1, "d": "A", "n": 6}, {"word": "BIRTHDAY", "clue": "Herod was having a ___ party", "r": 8, "c": 0, "d": "A", "n": 7}, {"word": "TRUTH", "clue": "John always told the ___, even to a king", "r": 10, "c": 4, "d": "A", "n": 8}, {"word": "PROMISE", "clue": "Herod made a foolish ___ at his party", "r": 0, "c": 2, "d": "D", "n": 1}, {"word": "JESUS", "clue": "John's disciples went and told ___", "r": 0, "c": 7, "d": "D", "n": 2}, {"word": "BRAVE", "clue": "John was ___ and spoke up for God", "r": 1, "c": 0, "d": "D", "n": 3}, {"word": "DANCED", "clue": "What the girl did at the party", "r": 2, "c": 9, "d": "D", "n": 4}, {"word": "PROPHET", "clue": "The people believed John was a ___ (God's messenger)", "r": 4, "c": 4, "d": "D", "n": 5}]}, "wordsearch": {"grid": ["PROPHETNBHB", "WJCSTKPKREY", "LUOPTORKARC", "CPTHIPOIVOY", "WRRCNBMNEDP", "YIUJVTIGWOA", "JSTYMWSLAOR", "LOHFUDEPBGT", "JNEHMMPCFOY", "MJESUSSIENS", "IYNLWMHECFE"], "words": ["HEROD", "JOHN", "PRISON", "TRUTH", "PROMISE", "PARTY", "BRAVE", "PROPHET", "JESUS", "KING"], "locs": {"PROMISE": [1, 6, 1, 0], "PROPHET": [0, 0, 0, 1], "PRISON": [3, 1, 1, 0], "HEROD": [0, 9, 1, 0], "TRUTH": [3, 2, 1, 0], "PARTY": [4, 10, 1, 0], "BRAVE": [0, 8, 1, 0], "JESUS": [9, 1, 0, 1], "JOHN": [1, 1, 1, 1], "KING": [2, 7, 1, 0]}}, "games": [["Courage Corners", "Label the four corners of the room A, B, C and D. Read a real-life situation (a friend asks to copy your homework, someone is being left out, a group chat is mocking a classmate) with four possible responses. Kids walk to the corner they would choose. Talk about what courage looks like in each case."], ["Truth or Not?", "Tape TRUE on one wall and FALSE on the other. Read statements from the story (use the True/False list, plus a few trickier ones of your own). Kids move to the right wall. Older kids try to correct each false statement."], ["Pass the Courage", "Like hot potato. Play music and pass a ball. When the music stops, whoever has the ball answers a quiz question or names one way to stand for the truth this week."]], "craft": {"name": "\"Speak the Truth\" Megaphone", "supplies": ["Construction paper or cardstock (one sheet per child)", "Tape or stapler", "Markers, pencil crayons, stickers"], "steps": ["Kids write Joshua 1:9 across a sheet of paper and decorate it.", "Roll the paper into a cone and tape it closed. Trim the big end so it is even.", "Take turns reading the memory verse through the megaphone.", "Talk about it: John used his voice for God. Where can we use ours this week?"]}, "links": [["John the Baptist crafts (camel-hair craft, cup craft, match game)", "https://www.daniellesplace.com/html/bible-crafts-john-the-baptist.html"], ["\"Prepare the Way\" craft ideas (announcement noisemaker, point-the-way map)", "https://ministry-to-children.com/prepare-the-way-for-jesus-bible-crafts/"], ["Death of John the Baptist lesson with free printable picture visuals", "https://www.biblefunforkids.com/2015/05/cathys-corner-death-of-john-baptist.html"]], "prayer": "Dear God, give me courage like John to stand for what is right, even when it is hard or unpopular. Help me care more about pleasing you than impressing others. Thank you that you are with me wherever I go. In Jesus' name, Amen.", "takeaways": ["John told the truth even when it was dangerous, because pleasing God mattered more to him than pleasing a king.", "Herod knew what was right, but pride and fear of what others thought led him to do wrong.", "A promise to do something wrong should never be kept. It is better to admit a mistake.", "Doing right does not always make life easier, but God sees and honors faithfulness.", "When something terrible happened, John's friends went straight to Jesus. We can bring our hurts to him too."], "storyNote": "This story includes a death. For younger kids, say simply that Herod had John killed and skip details about how. Older kids may know verse 11; answer honestly and calmly, then move to what John's courage teaches us. If kids ask about scene 2, keep it simple: Herod broke God's law about marriage, and John was brave enough to say so. Part 1 is a flashback: Herod's guilty conscience made him think Jesus was John come back.", "drawPrompt": "Draw a moment when someone your age might need courage to stand for what is right.", "files": [["🖨️ Kids' handout", "PDF", "files/matthew-14/week1-kids-handout.pdf", "Bloomers Matthew 14 Week 1 Kids Handout.pdf"], ["📄 Leader guide + activity pages", "PDF", "files/matthew-14/week1-leader-guide.pdf", "Bloomers Matthew 14 Week 1 Leader Guide.pdf"]]}, {"id": 2, "short": "Jesus Feeds 5,000", "title": "Jesus Feeds the 5,000", "ref": "Matthew 14:13-21", "emoji": "🍞", "bigIdea": "Jesus cares about people's needs. When we give him what we have, he can do more than we imagine.", "verse": "And my God will meet all your needs according to the riches of his glory in Christ Jesus.", "verseRef": "Philippians 4:19", "story": [["⛵", "Looking for a quiet place", "When Jesus heard what had happened to John, he got into a boat and went to a quiet place to be alone. He was grieving."], ["👥", "Compassion for the crowd", "The crowds found out and followed him on foot from the towns. When Jesus landed and saw them, he did not send them away. He had compassion on them and healed their sick."], ["🌅", "\"You give them something\"", "As evening came, the disciples said, \"This is a remote place, and it's already getting late. Send the crowds away so they can buy food in the villages.\" Jesus answered, \"They do not need to go away. You give them something to eat.\""], ["🍞", "Not nearly enough", "\"We have only five loaves of bread and two fish,\" they said. For thousands of hungry people, that was almost nothing. Jesus said, \"Bring them here to me.\""], ["🙏", "Jesus gives thanks", "Jesus had the people sit down on the grass. He took the loaves and fish, looked up to heaven, gave thanks and broke the bread. Then he gave it to the disciples to hand out."], ["🧺", "Twelve baskets left", "Everyone ate and was satisfied. The disciples picked up twelve baskets full of leftovers. About 5,000 men had eaten, plus women and children."]], "discussion": ["Jesus wanted time alone after hearing about John, but the crowd followed him. How did he respond, and what does that show about him?", "The disciples said, \"Send them away.\" Jesus said, \"You give them something to eat.\" Why do you think he put it back on them?", "What is something small you have (time, a skill, money, kindness) that you could offer to God?", "Why do you think there were twelve full baskets left over?"], "challenge": ["Jesus was sad about John, but he still helped the crowd. What does that show us about Jesus' heart?", "Jesus told the disciples, \"You give them something to eat.\" Why do you think he said that when he knew they did not have enough?", "Philippians 4:19 says God will meet all our needs. What is the difference between a need and a want?"], "mc": [["Why did Jesus go to a quiet place by boat?", ["To go fishing", "He had just heard about John's death", "He was hiding from the Romans", "To visit his family"], 1], ["When Jesus saw the crowd, what did he feel?", ["Annoyed", "Tired of them", "Compassion", "Afraid"], 2], ["What did the disciples want Jesus to do?", ["Send the crowd away to buy food", "Preach longer", "Find a bigger boat", "Call for help"], 0], ["What food did the disciples have?", ["Seven loaves and a few fish", "Five loaves and two fish", "Twelve loaves", "Only water"], 1], ["What did Jesus do before breaking the bread?", ["Looked up to heaven and gave thanks", "Counted the crowd", "Asked for more food", "Sent the disciples to town"], 0], ["How many baskets of leftovers were there?", ["Three", "Five", "Seven", "Twelve"], 3]], "tf": [["Jesus went to a quiet place by boat after hearing about John.", true], ["The crowd stayed home in the towns.", false], ["Jesus healed the sick people in the crowd.", true], ["Jesus told the disciples, \"You give them something to eat.\"", true], ["About 500 men were fed.", false], ["The people sat down on the grass to eat.", true]], "crossword": {"rows": 10, "cols": 10, "words": [{"word": "BOAT", "clue": "Jesus went to a quiet place by ___", "r": 0, "c": 3, "d": "A", "n": 1}, {"word": "FISH", "clue": "They also had two small ___", "r": 2, "c": 1, "d": "A", "n": 4}, {"word": "BASKETS", "clue": "The leftovers were picked up in ___", "r": 4, "c": 3, "d": "A", "n": 7}, {"word": "LOAVES", "clue": "Another word for bread rolls", "r": 6, "c": 0, "d": "A", "n": 9}, {"word": "FIVE", "clue": "How many loaves of bread were there?", "r": 9, "c": 5, "d": "A", "n": 10}, {"word": "THANKS", "clue": "Jesus looked up to heaven and gave ___", "r": 0, "c": 6, "d": "D", "n": 2}, {"word": "GRASS", "clue": "Jesus told the people to sit on the ___", "r": 0, "c": 9, "d": "D", "n": 3}, {"word": "HEALED", "clue": "Jesus ___ the sick people", "r": 2, "c": 4, "d": "D", "n": 5}, {"word": "CROWD", "clue": "A huge ___ followed Jesus on foot", "r": 4, "c": 1, "d": "D", "n": 6}, {"word": "TWELVE", "clue": "How many baskets were left over?", "r": 4, "c": 8, "d": "D", "n": 8}]}, "wordsearch": {"grid": ["PMHOUPCTEPY", "FITOTBFAYMN", "IALYWRTILPI", "SLJROEGBVVS", "HPIDMADBGEJ", "JTAABDTRJRE", "LWIDABEGAHS", "IERISFHGUWU", "KLJLKCROWDS", "BVSUETHANKS", "FERVTGRASSG"], "words": ["BREAD", "FISH", "FIVE", "TWO", "CROWD", "GRASS", "THANKS", "BASKET", "TWELVE", "JESUS"], "locs": {"THANKS": [9, 5, 0, 1], "BASKET": [5, 4, 1, 0], "TWELVE": [5, 1, 1, 0], "BREAD": [1, 5, 1, 0], "CROWD": [8, 5, 0, 1], "GRASS": [10, 5, 0, 1], "JESUS": [4, 10, 1, 0], "FISH": [1, 0, 1, 0], "FIVE": [1, 6, 1, 1], "TWO": [1, 4, 1, 0]}}, "games": [["Feed the Crowd Relay", "Make two teams. At one end, a pile of paper loaves and fish. At the other end, a basket per team. Kids run one at a time and carry food to their basket. First team to collect 5 loaves and 2 fish shouts \"More than enough!\""], ["Basket Hunt", "Before class, hide 12 small paper baskets around the room, each with a word of the memory verse on it. Kids find all 12 and put the verse in order."], ["Share the Snack", "Give one child a bag of fish crackers. Ask: \"What would Jesus do with this?\" Let them share it with the class, and give thanks before eating, like Jesus did. Check for food allergies first."]], "craft": {"name": "Paper Plate Basket of Loaves and Fish", "supplies": ["Paper plates (one and a half per child) or brown paper bags", "Brown and yellow paper for loaves", "Blue or silver paper for fish", "Glue sticks, stapler, crayons"], "steps": ["Cut one paper plate in half. Staple the half plate onto a whole plate to make a pocket (the basket). Color it brown.", "Kids cut out 5 loaf shapes and 2 fish shapes (pre-cut for the little ones).", "Write a word of the memory verse on each piece, or write \"Jesus gives more than enough!\"", "Put the loaves and fish in the basket. Kids can use them to retell the story at home."]}, "links": [["Jesus Feeds the 5000 craft ideas (with demonstration video)", "https://ministry-to-children.com/jesus-feeds-the-5000-crafts/"], ["Free printable Jesus Feeds 5000 craft and activities", "https://123homeschool4me.com/jesus-feeds-5000_63/"]], "prayer": "Dear Jesus, thank you for caring about me and giving me what I need. Help me trust you with what I have, even when it seems small, and help me share it with others. In Jesus' name, Amen.", "takeaways": ["Even while grieving, Jesus had compassion on the crowd and met their needs.", "Jesus invited the disciples to be part of the answer: \"You give them something to eat.\"", "What we have may look small, but Jesus can do great things with it when we give it to him.", "Jesus gave thanks before the miracle. Thankfulness and trust go together.", "God provides more than enough: everyone was satisfied, with twelve baskets to spare."], "storyNote": "Scene 1 connects to last week: Jesus had just heard that John had been killed. It is okay to say Jesus was sad; it shows he understands our grief. John 6:9 tells us the loaves and fish came from a boy's lunch, a good detail for older kids. With women and children included, the crowd was likely much bigger than 5,000.", "drawPrompt": "Draw the five loaves and two fish in Jesus' hands. Then write one small thing you can offer to Jesus this week.", "files": [["🖨️ Kids' handout", "PDF", "files/matthew-14/week2-kids-handout.pdf", "Bloomers Matthew 14 Week 2 Kids Handout.pdf"], ["📄 Leader guide + activity pages", "PDF", "files/matthew-14/week2-leader-guide.pdf", "Bloomers Matthew 14 Week 2 Leader Guide.pdf"]]}, {"id": 3, "short": "Jesus Walks on Water", "title": "Jesus Walks on Water", "ref": "Matthew 14:22-33", "emoji": "🌊", "bigIdea": "When life gets stormy, keep your eyes on Jesus. He is the Son of God, and he is right there to help.", "verse": "Take courage! It is I. Don't be afraid.", "verseRef": "Matthew 14:27", "story": [["⛰️", "Jesus prays alone", "After feeding the crowd, Jesus sent the disciples ahead by boat and dismissed the people. Then he went up on a mountainside by himself to pray. He was still there alone when night came."], ["🌬️", "A stormy night", "By now the boat was far from shore, battered by the waves because the wind was against it. The disciples struggled through the night."], ["👻", "\"It's a ghost!\"", "Shortly before dawn, Jesus came toward them, walking on the lake. The disciples were terrified. \"It's a ghost!\" they cried out in fear."], ["🙌", "Take courage!", "Immediately Jesus said, \"Take courage! It is I. Don't be afraid.\" Peter replied, \"Lord, if it's you, tell me to come to you on the water.\" Jesus said, \"Come.\""], ["🌊", "Peter walks, then sinks", "Peter stepped out of the boat and walked on the water toward Jesus. But when he saw the wind, he was afraid and began to sink. He cried out, \"Lord, save me!\""], ["✋", "\"Truly you are the Son of God\"", "Immediately Jesus reached out his hand and caught him. \"You of little faith,\" he said, \"why did you doubt?\" When they climbed into the boat, the wind died down, and the disciples worshiped him, saying, \"Truly you are the Son of God.\""]], "discussion": ["What was Jesus doing on the mountainside before he walked on the water? Why does that matter?", "Peter walked on water. What changed when he looked at the wind instead of Jesus?", "What are some storms (worries or hard situations) kids your age go through?", "What did Jesus do the moment Peter cried for help? What does that tell us about him?"], "challenge": ["Jesus prayed alone before the storm. Why do you think he made time to pray?", "Jesus asked Peter, \"Why did you doubt?\" What does it mean to doubt? How can we grow our faith?", "At the end, the disciples said Jesus is the Son of God. How did this miracle show them who Jesus really is?"], "mc": [["Where did Jesus go after sending the crowd home?", ["Into the temple", "Up a mountainside to pray", "To Peter's house", "Into the boat"], 1], ["Why was the boat in trouble?", ["It had a hole", "The wind was against it and waves battered it", "It was too full of fish", "It hit some rocks"], 1], ["What did the disciples think Jesus was?", ["An angel", "A fisherman", "A ghost", "Elijah"], 2], ["What did Jesus say to the frightened disciples?", ["\"Row harder!\"", "\"Take courage! It is I. Don't be afraid.\"", "\"Go back to shore.\"", "\"Why are you awake?\""], 1], ["Why did Peter begin to sink?", ["He saw the wind and was afraid", "He was carrying too much", "He slipped on a wave", "Jesus walked away"], 0], ["What did the disciples say when the wind stopped?", ["\"Let's go home\"", "\"Truly you are the Son of God\"", "\"That was close\"", "\"We should have stayed on land\""], 1]], "tf": [["Jesus went up a mountainside to pray by himself.", true], ["The night was calm with no wind.", false], ["The disciples thought Jesus was a ghost.", true], ["Peter walked on the water toward Jesus.", true], ["Jesus waited a long time before helping Peter.", false], ["When they got into the boat, the wind died down.", true]], "crossword": {"rows": 11, "cols": 11, "words": [{"word": "PRAY", "clue": "Jesus went up the mountain to ___", "r": 1, "c": 2, "d": "A", "n": 2}, {"word": "WORSHIPED", "clue": "At the end, the disciples ___ Jesus", "r": 4, "c": 1, "d": "A", "n": 5}, {"word": "HAND", "clue": "Jesus reached out his ___ and caught Peter", "r": 6, "c": 0, "d": "A", "n": 7}, {"word": "COURAGE", "clue": "\"Take ___! It is I.\"", "r": 8, "c": 4, "d": "A", "n": 9}, {"word": "SINK", "clue": "When Peter got scared, he began to ___", "r": 10, "c": 0, "d": "A", "n": 10}, {"word": "WAVES", "clue": "The boat was hit by big ___", "r": 0, "c": 4, "d": "D", "n": 1}, {"word": "WIND", "clue": "The ___ was blowing against the boat", "r": 1, "c": 9, "d": "D", "n": 3}, {"word": "MOUNTAIN", "clue": "Jesus went up on a ___ by himself", "r": 3, "c": 2, "d": "D", "n": 4}, {"word": "PETER", "clue": "The disciple who walked on water", "r": 4, "c": 7, "d": "D", "n": 6}, {"word": "GHOST", "clue": "The disciples thought Jesus was a ___", "r": 6, "c": 5, "d": "D", "n": 8}]}, "wordsearch": {"grid": ["FAITHWSMGKE", "SSINKINJLOR", "MKHPMNJESUS", "BOATIDACFYY", "PANPCSURHTU", "KSDUGDFWFVL", "KLUPHWAVESJ", "HDFEOCFNLFW", "BWRTSWHPRAY", "NFTETALPRMW", "HHFRSCONPBJ"], "words": ["BOAT", "WIND", "WAVES", "GHOST", "PETER", "SINK", "HAND", "PRAY", "FAITH", "JESUS"], "locs": {"WAVES": [6, 5, 0, 1], "GHOST": [5, 4, 1, 0], "PETER": [6, 3, 1, 0], "FAITH": [0, 0, 0, 1], "JESUS": [2, 6, 0, 1], "BOAT": [3, 0, 0, 1], "WIND": [0, 5, 1, 0], "SINK": [1, 1, 0, 1], "HAND": [2, 2, 1, 0], "PRAY": [8, 7, 0, 1]}}, "games": [["Keep Your Eyes on Jesus", "Put a line of tape on the floor (the \"water\"). Tape a picture of Jesus on the far wall. One child at a time walks the line looking only at Jesus while the others make storm noises (no touching). If they look away, they \"sink\" and start again."], ["Peter, Come!", "Like Red Light, Green Light. The leader is at the far end. When the leader says \"Come!\" kids walk toward them. When the leader shouts \"WIND!\" everyone freezes. Anyone who moves \"sinks\" and goes back to the start until someone calls \"Lord, save me!\""], ["Sink or Float", "Fill a clear tub with water. Hold up items (coin, sponge, rock, cork, spoon, leaf). Kids predict sink or float before you drop each one in. Then ask: what would happen to a person? Walking on water is something only God can do."]], "craft": {"name": "Walking on Water Slider", "supplies": ["Paper plates or blue cardstock", "Craft sticks (popsicle sticks)", "Small printed or drawn Jesus and Peter figures", "Crayons, glue, scissors, cotton balls (clouds)"], "steps": ["Color the paper plate like a stormy sea: blue waves on the bottom half, a dark sky on top. Glue cotton balls as clouds.", "Leader cuts a long slit across the waves (use a craft knife before class).", "Kids color Jesus and Peter and glue each to a craft stick.", "Push the sticks up through the slit from behind so Jesus and Peter can \"walk\" across the water. Drop Peter down to show him sinking, and bring Jesus over to save him."]}, "links": [["Jesus Walks on Water craft ideas (with printable directions)", "https://ministry-to-children.com/jesus-walks-on-water-craft/"], ["Jesus Walks on Water lesson with the \"Keep Your Eyes on Jesus\" game", "https://ministry-to-children.com/lesson-jesus-walks-on-water/"], ["Free Jesus Walks on Water coloring page", "https://ministry-to-children.com/jesus-walks-on-water-coloring-page/"], ["All Jesus Walks on Water resources (skit, preschool craft, more)", "https://ministry-to-children.com/bible/jesus-walks-on-water/"]], "prayer": "Dear Jesus, when I am scared, help me keep my eyes on you. Thank you for always reaching out your hand to help me. You are the Son of God! In Jesus' name, Amen.", "takeaways": ["Jesus made time to pray, even after a long and busy day.", "Jesus came to his disciples in the middle of the storm. He does not leave us alone in hard times.", "Peter did the impossible while his eyes were on Jesus. Fear took over when he looked at the wind.", "When Peter cried for help, Jesus saved him immediately. We can always call on him.", "This miracle showed the disciples who Jesus really is: the Son of God, worthy of worship."], "storyNote": "Kids may ask whether Peter failed. Point out that Peter was the only one brave enough to step out, and when he started to sink he did the right thing: he called on Jesus. Mark 6:48 tells us this happened in the fourth watch of the night, between about 3 and 6 a.m. Talk about the storms kids face (worries, family changes, school stress) gently, without pressing anyone to share.", "drawPrompt": "Draw Peter and Jesus on the water. Then write one worry you can hand over to Jesus.", "files": [["🖨️ Kids' handout", "PDF", "files/matthew-14/week3-kids-handout.pdf", "Bloomers Matthew 14 Week 3 Kids Handout.pdf"], ["📄 Leader guide + activity pages", "PDF", "files/matthew-14/week3-leader-guide.pdf", "Bloomers Matthew 14 Week 3 Leader Guide.pdf"]]}]}, {"id": "matthew-15", "name": "Matthew 15", "weeks": [{"id": 1, "short": "From the Heart", "title": "A Heart That Worships and Trusts", "ref": "Matthew 15:1-28", "emoji": "❤️", "bigIdea": "God looks at our hearts. Worship him from your heart and trust him with great faith.", "verse": "People look at the outward appearance, but the LORD looks at the heart.", "verseRef": "1 Samuel 16:7", "story": [["🧼", "A question about hands", "Some Pharisees and teachers of the law came all the way from Jerusalem with a complaint: \"Why don't your disciples wash their hands before they eat, the way our tradition says?\" They cared a lot about rules for the outside."], ["🗣️", "Lips and hearts", "Jesus told them God's words from long ago: \"These people honor me with their lips, but their hearts are far from me.\" They said nice words to God, but their hearts were not really with him."], ["❤️", "What comes from the heart", "Jesus told the crowd, \"What goes into someone's mouth does not make them unclean. What comes out of their mouth does.\" Evil thoughts, lies, cruel words and hurting others all start in the heart. God cares most about what is inside us."], ["🙏", "A mom who needed help", "Then Jesus went to the area of Tyre and Sidon. A Canaanite woman, who was not Jewish, came crying out, \"Lord, Son of David, have mercy on me! My daughter is suffering terribly.\" At first Jesus did not answer, and the disciples wanted to send her away."], ["🍞", "She kept on asking", "She knelt in front of Jesus and said, \"Lord, help me!\" Jesus told her his work was first for the people of Israel, like bread for the children of the house. She answered, \"Yes, Lord, but even the little dogs eat the crumbs that fall from the table.\""], ["⭐", "Great faith!", "Jesus said, \"Woman, you have great faith! Your request is granted.\" Her daughter was healed at that very moment. She trusted Jesus with her whole heart, and she did not give up."]], "storyNote": "Hand-washing: the Pharisees' rule was a religious ceremony, not about germs. If kids joke that Jesus says we don't have to wash our hands, remind them we still do! Older kids can read the full list in Matthew 15:19. The Bible says the daughter was troubled by a demon; for younger kids, just say she was suffering terribly. Jesus' words about bread and dogs can sound harsh. The word means small house pets, and Jesus was drawing out her faith so everyone could see it. She was not offended. She kept trusting, and Jesus praised her faith publicly. On faith: when we trust Jesus and keep asking, he hears us and answers in his way and his time. If a child asks why a prayer was not answered the way they hoped, remind them God still loves them and knows what is best.", "discussion": ["The Pharisees cared about clean hands. What did Jesus say God cares about most?", "What does it mean to worship God with our lips but not our hearts? What does worship from the heart look like?", "The mom kept asking even when it was hard. Why didn't she give up?", "What is something you can ask Jesus to help with this week, trusting him like she did?"], "challenge": ["Read Matthew 15:8. Why do you think God wants our hearts, and not just our words?", "The woman was not Jewish, but Jesus helped her. What does that show us about who Jesus came for?", "Jesus said, \"Your request is granted.\" What does it mean to have great faith? How can our faith grow?"], "mc": [["Who complained that the disciples didn't wash their hands the traditional way?", ["The Romans", "Pharisees and teachers of the law", "Fishermen", "The crowd"], 1], ["Jesus said some people honor God with their lips, but their ___ is far from him.", ["Feet", "Hands", "Heart", "House"], 2], ["What makes a person unclean, according to Jesus?", ["Dirty hands", "What comes out of the heart", "Eating the wrong food", "Skipping a meal"], 1], ["Why did the Canaanite woman come to Jesus?", ["To ask for food", "Her daughter was suffering terribly", "She was lost", "To argue with the disciples"], 1], ["What did the woman say even the little dogs eat?", ["Bones", "Crumbs from the table", "Fish", "Leftover bread from the market"], 1], ["What did Jesus say to her?", ["\"Go back home\"", "\"Woman, you have great faith!\"", "\"Ask again tomorrow\"", "\"You are not from Israel\""], 1]], "tf": [["Jesus said God cares most about what is in our hearts.", true], ["The Pharisees were happy with the disciples.", false], ["Unkind words start in the heart.", true], ["The Canaanite woman gave up when Jesus did not answer.", false], ["The woman knelt and said, \"Lord, help me!\"", true], ["Her daughter was healed at that very moment.", true]], "games": [["Inside or Outside?", "Read real-life situations (singing in church while texting, helping a friend when no one is watching, saying sorry only to avoid trouble). Kids stand if it shows a true heart and stay seated if it is only on the outside. Talk through each one."], ["Crumb Hunt", "Before class, hide small paper \"crumbs\" around the room, with one word of the memory verse on each. Kids keep searching until every crumb is found, then put the verse in order. Like the mom, we keep going and keep trusting Jesus."], ["Pass the Heart", "Like hot potato. Play music and pass a paper or soft heart. When the music stops, whoever has it says one way to love God from the heart, or answers a quiz question."]], "craft": {"name": "What's Inside Counts Heart Pocket", "supplies": ["Two paper hearts per child (red or pink cardstock)", "Stapler or glue", "Small paper strips", "Markers, crayons, stickers"], "steps": ["Kids decorate the front of one heart and write GOD LOOKS AT THE HEART.", "Staple or glue the two hearts together around the edges, leaving the top open to make a pocket.", "On paper strips, kids write or draw good things God can grow in their hearts (love, kindness, faith, truth) and one prayer they are trusting Jesus for.", "Tuck the strips inside. At home, pull one out each day and pray about it."]}, "links": [["Clean Hands and Clean Hearts craft ideas (Mark 7, the same teaching)", "https://ministry-to-children.com/clean-hands-clean-hearts-bible-craft-ideas/"], ["Jesus and the Canaanite Woman craft ideas", "https://ministry-to-children.com/jesus-and-the-canaanite-woman-craft-ideas/"], ["Canaanite Woman lesson with a partner game and scavenger hunt", "https://ministry-to-children.com/faith-and-assurance-lessons-from-a-canaanite-woman/"], ["\"Crumbs from the Table\" video lesson (Matthew 15:21-28)", "https://sermons4kids.com/crumbs-from-the-table-6"]], "drawPrompt": "Draw a big heart. Inside it, draw or write the things you want God to see in your heart.", "prayer": "Dear God, thank you for looking at my heart. Help me worship you with my whole heart, not just my words. Help me trust you like the mom who never gave up. In Jesus' name, Amen.", "crossword": {"rows": 10, "cols": 12, "words": [{"word": "LIPS", "clue": "Some people honored God with their ___ only", "r": 0, "c": 5, "d": "A", "n": 1}, {"word": "HANDS", "clue": "The Pharisees fussed about washing these", "r": 2, "c": 0, "d": "A", "n": 5}, {"word": "CRUMBS", "clue": "Even the little dogs eat the ___", "r": 3, "c": 6, "d": "A", "n": 7}, {"word": "HEALED", "clue": "The girl was ___ at that very moment", "r": 6, "c": 3, "d": "A", "n": 9}, {"word": "KNELT", "clue": "The woman ___ in front of Jesus", "r": 8, "c": 1, "d": "A", "n": 10}, {"word": "PHARISEES", "clue": "Religious leaders who complained to Jesus", "r": 0, "c": 7, "d": "D", "n": 2}, {"word": "WORSHIP", "clue": "Loving and praising God from the heart", "r": 0, "c": 11, "d": "D", "n": 3}, {"word": "FAITH", "clue": "Jesus said, \"Woman, you have great ___!\"", "r": 1, "c": 1, "d": "D", "n": 4}, {"word": "DAUGHTER", "clue": "The mom asked Jesus to help her ___", "r": 2, "c": 3, "d": "D", "n": 6}, {"word": "HEART", "clue": "God looks at the ___", "r": 4, "c": 5, "d": "D", "n": 8}]}, "wordsearch": {"grid": ["SKMSGUSTJOC", "UMHEHANDSKT", "HJFERGFBUWI", "WPCLACCWJEE", "OWBHIRYCEFC", "RAYESPTRSAW", "SSMAYRSUUII", "HHRLHGWMSTT", "INTEIOPBWHV", "PYLDCKUSDPT", "VKGHAIDYHLF"], "words": ["HEART", "LIPS", "HANDS", "WASH", "WORSHIP", "FAITH", "CRUMBS", "MERCY", "HEALED", "JESUS"], "locs": {"WORSHIP": [3, 0, 1, 0], "CRUMBS": [4, 7, 1, 0], "HEALED": [4, 3, 1, 0], "HEART": [1, 2, 1, 1], "HANDS": [1, 4, 0, 1], "FAITH": [4, 9, 1, 0], "MERCY": [0, 2, 1, 1], "JESUS": [3, 8, 1, 0], "LIPS": [3, 3, 1, 1], "WASH": [4, 1, 1, 0]}}, "takeaways": ["God looks past outward appearance and religious habits. He cares most about our hearts.", "Worship is more than words. God wants hearts that truly love him.", "Our words and actions show what is in our hearts, so we ask God to keep our hearts clean.", "The Canaanite mom kept asking with humble, bold faith, even when it was hard.", "Jesus welcomes everyone who comes to him in faith. He told her, \"Your request is granted.\""], "files": [["🖨️ Kids' handout", "PDF", "files/matthew-15/week1-kids-handout.pdf", "Bloomers Matthew 15 Week 1 Kids Handout.pdf"], ["📄 Leader guide + activity pages", "PDF", "files/matthew-15/week1-leader-guide.pdf", "Bloomers Matthew 15 Week 1 Leader Guide.pdf"]]}, {"id": 2, "short": "Jesus Feeds 4,000", "title": "Jesus Feeds the 4,000", "ref": "Matthew 15:29-39", "emoji": "🧺", "bigIdea": "God is concerned about all of us. He cares for our hearts and our bodies, and he gives more than enough.", "verse": "The LORD is good to all; he has compassion on all he has made.", "verseRef": "Psalm 145:9", "story": [["⛰️", "Up on the mountainside", "Jesus walked along the Sea of Galilee and went up on a mountainside. He sat down, and great crowds of people came to him."], ["🩹", "Jesus heals everyone", "People brought friends and family who could not walk, could not see or could not talk, and many others who were sick. They laid them at Jesus' feet, and he healed them! The crowd was amazed and praised God."], ["💛", "Jesus has compassion", "The people stayed with Jesus for three days, and their food ran out. Jesus called his disciples and said, \"I have compassion for these people. I don't want to send them away hungry, or they may collapse on the way.\" Jesus cared about their bodies too."], ["🍞", "Seven loaves", "The disciples asked, \"Where could we get enough bread out here for a crowd this big?\" Jesus asked, \"How many loaves do you have?\" They said, \"Seven, and a few small fish.\""], ["🙏", "Jesus gives thanks", "Jesus told the crowd to sit down on the ground. He took the seven loaves and the fish, gave thanks and broke them. He gave them to the disciples, and the disciples gave them to the people."], ["✨", "More than enough!", "Everyone ate and was satisfied! The disciples picked up seven basketfuls of leftovers. There were 4,000 men, plus all the women and children. God gave more than enough!"]], "storyNote": "Go over the numbers with the kids: 3 days with Jesus, 7 loaves, a few small fish, 4,000 men plus the women and children (many thousands of people altogether), and 7 baskets of leftovers. Point out the order: Jesus healed people first, then fed them. God cares about our whole selves: our souls, our bodies, our feelings and our everyday needs. God is concerned about all of us, every single person in the crowd. Older kids may notice this is like the feeding of the 5,000 in Matthew 14. Ask what is the same and what is different. If a child in your class is sick or going through something hard, keep it simple: God cares about them and is with them.", "discussion": ["What did Jesus do for the people who were sick?", "Jesus said, \"I have compassion for these people.\" What does compassion mean?", "Jesus cared that the people were hungry. What everyday things does God care about in your life?", "There were seven baskets left over and everyone was satisfied. What does that tell us about God?"], "challenge": ["Jesus healed people's bodies and also fed them. Why do you think he cared about both?", "Read 3 John 1:2. What does it say about our health and our souls?", "Read Matthew 16:9-10. Jesus reminded the disciples about the 5,000 and the 4,000. Why is it good to remember what God has done for us?"], "mc": [["Where did Jesus sit down before the crowds came?", ["In a boat", "On a mountainside", "In the temple", "Under a tree"], 1], ["How long had the people been with Jesus?", ["One hour", "One day", "Three days", "Ten days"], 2], ["What did Jesus feel for the hungry people?", ["Anger", "Compassion", "Boredom", "Fear"], 1], ["How many loaves of bread did the disciples have?", ["Two", "Five", "Seven", "Twelve"], 2], ["How many baskets of leftovers were there?", ["None", "Three", "Seven", "Twelve"], 2], ["How many men ate, not counting women and children?", ["400", "1,000", "4,000", "40,000"], 2]], "tf": [["Jesus healed people who could not walk, see or talk.", true], ["The people were with Jesus for three days.", true], ["Jesus wanted to send the people away hungry.", false], ["The disciples had seven loaves and a few small fish.", true], ["Some people were still hungry at the end.", false], ["There were seven baskets of leftovers.", true]], "games": [["Count the Crowd", "Hide 7 paper loaves and a few paper fish around the room. Kids find them all, then count the story numbers out loud together: 3 days, 7 loaves, a few fish, 4,000 men, 7 baskets. Finish by shouting \"More than enough!\""], ["God Cares About That!", "Kids take turns acting out a need without talking: hungry, sad, a hurt knee, tired, scared, sick. The class guesses, then everyone shouts together, \"God cares about that!\""], ["Seven Baskets Toss", "Set out 7 baskets, bowls or boxes. Kids take turns tossing a soft ball or crumpled paper. Each time it lands in a basket, they name one thing God gives them (food, family, health, friends, a home)."]], "craft": {"name": "God Cares for All of Me Plate", "supplies": ["One paper plate per child", "Brown and yellow paper for 7 loaves, blue or silver paper for fish (pre-cut for little ones)", "Glue sticks", "Markers and crayons"], "steps": ["Kids write GOD CARES FOR ALL OF US! around the rim of the plate.", "Glue 7 paper loaves and a few paper fish in the middle and count them out loud.", "Draw 7 small baskets around the plate. In each basket, write or draw one thing God cares about in your life (food, health, family, friends, home, school, church).", "Hold up the plates and say Psalm 145:9 together."]}, "links": [["Loaves and fish craft ideas (basket, fish bag, blessing bag). Made for the 5,000, works for the 4,000", "https://ministry-to-children.com/jesus-feeds-the-5000-crafts/"], ["Free printable bread and fish craft template", "https://123homeschool4me.com/jesus-feeds-5000_63/"]], "drawPrompt": "Draw Jesus taking care of the crowd: healing people and feeding them. Then draw one way God takes care of you.", "prayer": "Dear Jesus, thank you for caring about all of me: my heart, my body and everything I need. Thank you for your compassion and for giving more than enough. Help me care about others the way you do. In Jesus' name, Amen.", "crossword": {"rows": 12, "cols": 11, "words": [{"word": "FISH", "clue": "They also had a few small ___", "r": 1, "c": 7, "d": "A", "n": 2}, {"word": "COMPASSION", "clue": "Jesus felt this for the hungry crowd", "r": 3, "c": 1, "d": "A", "n": 4}, {"word": "SEVEN", "clue": "How many loaves did they have?", "r": 5, "c": 0, "d": "A", "n": 6}, {"word": "BASKETS", "clue": "Seven ___ of leftovers", "r": 7, "c": 4, "d": "A", "n": 7}, {"word": "MOUNTAIN", "clue": "Jesus sat down on the ___side", "r": 9, "c": 0, "d": "A", "n": 9}, {"word": "HEALED", "clue": "Jesus ___ people who could not walk or see", "r": 11, "c": 1, "d": "A", "n": 10}, {"word": "THANKS", "clue": "Jesus held the bread and gave ___", "r": 0, "c": 10, "d": "D", "n": 1}, {"word": "LOAVES", "clue": "Another word for bread rolls", "r": 2, "c": 2, "d": "D", "n": 3}, {"word": "SATISFIED", "clue": "Everyone ate and was ___ (full)", "r": 3, "c": 6, "d": "D", "n": 5}, {"word": "THREE", "clue": "How many days were the people with Jesus?", "r": 7, "c": 9, "d": "D", "n": 8}]}, "wordsearch": {"grid": ["TIOPWVYLCKU", "DPSTCROWDVK", "GHCEAIDFISH", "LYHAVLFKNBD", "OHETREYBHTB", "AETHVENASHU", "VAWACADSVRG", "ELUNTDMKCEL", "SDBKUAGEFEY", "DPGSBWATSNU", "DICHCVFULLJ"], "words": ["SEVEN", "LOAVES", "FISH", "BASKET", "HEAL", "CARE", "CROWD", "THANKS", "THREE", "FULL"], "locs": {"LOAVES": [3, 0, 1, 0], "BASKET": [4, 7, 1, 0], "THANKS": [4, 3, 1, 0], "SEVEN": [1, 2, 1, 1], "CROWD": [1, 4, 0, 1], "THREE": [4, 9, 1, 0], "FISH": [2, 7, 0, 1], "HEAL": [4, 1, 1, 0], "CARE": [2, 2, 1, 1], "FULL": [10, 6, 0, 1]}}, "takeaways": ["Jesus healed the sick and fed the hungry. God cares about our bodies as well as our souls.", "Jesus noticed the crowd had been with him three days and had nothing left to eat. He had compassion.", "God is concerned about all of us: every person in the crowd and every part of our lives.", "Jesus took seven loaves and a few fish, gave thanks, and fed 4,000 men plus women and children.", "God gives more than enough: everyone was satisfied, with seven baskets left over."], "files": [["🖨️ Kids' handout", "PDF", "files/matthew-15/week2-kids-handout.pdf", "Bloomers Matthew 15 Week 2 Kids Handout.pdf"], ["📄 Leader guide + activity pages", "PDF", "files/matthew-15/week2-leader-guide.pdf", "Bloomers Matthew 15 Week 2 Leader Guide.pdf"]]}]}];
+const SECTIONS = [
+  ["story", "📖 Story"], ["verse", "💬 Memory Verse"], ["quiz", "🔵 Quiz"], ["tf", "✅ True or False"],
+  ["cross", "✏️ Crossword"], ["search", "🔍 Word Search"], ["talk", "🎮 Talk & Games"]
+];
+let series = SERIES[SERIES.length - 1].id, week = 1, section = "story";
+let WEEKS = SERIES[SERIES.length - 1].weeks;
+function setSeries(id) { const f = SERIES.find(x => x.id === id); if (!f) return; series = id; WEEKS = f.weeks; if (week > WEEKS.length) week = 1; }
+const st = {};
+function S() { const key = series + ":" + week; return st[key] || (st[key] = { scene: 0, q: 0, qScore: 0, qPicked: null, t: 0, tScore: 0, tPicked: null, verseBuilt: [], verseOrder: null, gaps: [], vmode: "build", cwVals: {}, found: [], revealed: [] }); }
+const W = () => WEEKS[week - 1];
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+function shuffle(a, seed) { a = a.slice(); let s = seed; for (let i = a.length - 1; i > 0; i--) { s = (s * 9301 + 49297) % 233280; const j = Math.floor(s / 233280 * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+/* ---------- added lessons (shared db, or this device as a fallback) ---------- */
+const BASE = SERIES.map(s => ({ ...s, weeks: s.weeks.slice() }));
+let db = null, userApi = null, me = null, isOwner = false, canShared = null, sharedReady = false;
+let SHARED = [], LOCAL = [];
+try { LOCAL = JSON.parse(localStorage.getItem("bloomers-mine") || "[]"); if (!Array.isArray(LOCAL)) LOCAL = []; } catch (e) { LOCAL = []; }
+function saveLocal() { try { localStorage.setItem("bloomers-mine", JSON.stringify(LOCAL)); return true; } catch (e) { return false; } }
+const clip = (v, n) => typeof v === "string" ? v.trim().slice(0, n) : "";
+const arr = (v, n) => Array.isArray(v) ? v.slice(0, n) : [];
+const int = v => Number.isInteger(v) ? v : -1;
+function cleanCross(cw) {
+  if (!cw || typeof cw !== "object") return null;
+  const rows = int(cw.rows), cols = int(cw.cols); if (rows < 1 || cols < 1 || rows > 20 || cols > 20) return null;
+  const words = arr(cw.words, 12).filter(w => w && /^[A-Z]{2,14}$/.test(w.word) && (w.d === "A" || w.d === "D") && int(w.r) >= 0 && int(w.c) >= 0 && int(w.n) > 0
+    && (w.d === "A" ? w.c + w.word.length <= cols && w.r < rows : w.r + w.word.length <= rows && w.c < cols)).map(w => ({ word: w.word, clue: clip(w.clue, 200), r: w.r, c: w.c, d: w.d, n: w.n }));
+  return words.length >= 2 ? { rows, cols, words } : null;
+}
+function cleanWS(ws) {
+  if (!ws || typeof ws !== "object") return null;
+  const grid = arr(ws.grid, 15); if (!grid.length || !grid.every(g => typeof g === "string" && /^[A-Z]+$/.test(g) && g.length === grid.length)) return null;
+  const N = grid.length, locs = {}, words = arr(ws.words, 12).filter(w => {
+    const l = ws.locs && ws.locs[w]; if (!/^[A-Z]{2,15}$/.test(w) || !Array.isArray(l) || l.length !== 4 || !l.every(x => Number.isInteger(x))) return false;
+    const [r, c, dr, dc] = l; if (r < 0 || c < 0 || r + dr * (w.length - 1) >= N || c + dc * (w.length - 1) >= N) return false;
+    locs[w] = l; return true; });
+  return words.length ? { grid, words, locs } : null;
+}
+function cleanWeek(w) {
+  if (!w || typeof w !== "object") return null;
+  const o = {
+    title: clip(w.title, 120), short: clip(w.short, 40), ref: clip(w.ref, 80), emoji: clip(w.emoji, 8) || "🌸",
+    bigIdea: clip(w.bigIdea, 300), verse: clip(w.verse, 400), verseRef: clip(w.verseRef, 60),
+    story: arr(w.story, 12).map(s => [clip(s && s[0], 8) || "📖", clip(s && s[1], 100), clip(s && s[2], 600)]).filter(s => s[1] || s[2]),
+    discussion: arr(w.discussion, 12).map(q => clip(q, 300)).filter(Boolean),
+    challenge: arr(w.challenge, 12).map(q => clip(q, 300)).filter(Boolean),
+    mc: arr(w.mc, 12).map(m => [clip(m && m[0], 300), arr(m && m[1], 4).map(x => clip(x, 150)), int(m && m[2])]).filter(m => m[0] && m[1].length === 4 && m[1].every(Boolean) && m[2] >= 0 && m[2] < 4),
+    tf: arr(w.tf, 12).map(t => [clip(t && t[0], 300), !!(t && t[1])]).filter(t => t[0]),
+    games: arr(w.games, 6).map(g => [clip(g && g[0], 80), clip(g && g[1], 600)]).filter(g => g[0] || g[1]),
+    craft: w.craft && typeof w.craft === "object" ? { name: clip(w.craft.name, 100), supplies: arr(w.craft.supplies, 20).map(s => clip(s, 100)).filter(Boolean), steps: arr(w.craft.steps, 12).map(s => clip(s, 300)).filter(Boolean) } : null,
+    links: arr(w.links, 6).map(l => [clip(l && l[0], 100), clip(l && l[1], 500)]).filter(l => l[0] && /^https:\/\/[^\s"'<>]+$/.test(l[1])),
+    prayer: clip(w.prayer, 800), crossword: cleanCross(w.crossword), wordsearch: cleanWS(w.wordsearch)
+  };
+  if (!o.title) return null;
+  if (!o.short) o.short = o.title.length > 18 ? o.title.slice(0, 17) + "…" : o.title;
+  return o;
+}
+function rebuild() {
+  SERIES.length = 0;
+  BASE.forEach(s => SERIES.push({ ...s, weeks: s.weeks.slice() }));
+  const all = [...SHARED.map(d => ({ ...d, source: "shared" })), ...LOCAL.map(d => ({ ...d, source: "local" }))].sort((a, b) => (+a.at || 0) - (+b.at || 0));
+  all.forEach(d => {
+    if (typeof d.seriesId !== "string" || !/^[a-z0-9-]{1,60}$/.test(d.seriesId)) return;
+    const w = cleanWeek(d.week); if (!w) return;
+    let s = SERIES.find(x => x.id === d.seriesId);
+    if (!s) { s = { id: d.seriesId, name: clip(d.seriesName, 60) || "New lessons", weeks: [] }; SERIES.push(s); }
+    w.id = s.weeks.length + 1; w.added = { key: d.key, source: d.source, by: typeof d.by === "string" ? d.by : null }; s.weeks.push(w);
+  });
+  const cur = SERIES.find(x => x.id === series) || SERIES[SERIES.length - 1];
+  series = cur.id; WEEKS = cur.weeks; if (week > WEEKS.length) week = 1;
+}
+rebuild();
+const canModify = w => !!w.added && (w.added.source === "local" || isOwner || (!!me && w.added.by === me));
+const findDoc = a => (a.source === "local" ? LOCAL : SHARED).find(d => d.key === a.key);
+
+/* puzzles, built in the browser from the teacher's words */
+function rng(seed) { let s = seed >>> 0 || 1; return () => (s = (Math.imul(s, 1664525) + 1013904223) >>> 0) / 4294967296; }
+function makeCrossword(list) {
+  if (list.length < 2) return null;
+  const key = (r, c) => r + "," + c;
+  let best = null;
+  for (let seed = 1; seed <= 160; seed++) {
+    const R = rng(seed), cells = new Map(), placed = [];
+    const order = list.map(x => [x, x[0].length + R() * 3]).sort((a, b) => b[1] - a[1]).map(x => x[0]);
+    const put = (wd, r, c, d) => { const [dr, dc] = d === "A" ? [0, 1] : [1, 0];
+      [...wd[0]].forEach((ch, i) => { const k = key(r + dr * i, c + dc * i), e = cells.get(k) || { ch, A: false, D: false }; e[d] = true; cells.set(k, e); });
+      placed.push({ word: wd[0], clue: wd[1], r, c, d }); };
+    const fits = (w, r, c, d) => {
+      const [dr, dc] = d === "A" ? [0, 1] : [1, 0], pr = dc, pc = dr;
+      if (cells.has(key(r - dr, c - dc)) || cells.has(key(r + dr * w.length, c + dc * w.length))) return 0;
+      let cross = 0;
+      for (let i = 0; i < w.length; i++) { const rr = r + dr * i, cc = c + dc * i, e = cells.get(key(rr, cc));
+        if (e) { if (e.ch !== w[i] || e[d]) return 0; cross++; }
+        else if (cells.has(key(rr + pr, cc + pc)) || cells.has(key(rr - pr, cc - pc))) return 0; }
+      return cross;
+    };
+    const box = () => { let r0 = 1e9, r1 = -1e9, c0 = 1e9, c1 = -1e9; cells.forEach((_, k) => { const [r, c] = k.split(",").map(Number); r0 = Math.min(r0, r); r1 = Math.max(r1, r); c0 = Math.min(c0, c); c1 = Math.max(c1, c); }); return [r0, r1, c0, c1]; };
+    put(order[0], 0, 0, R() < .5 ? "A" : "D");
+    let rest = order.slice(1), progress = true;
+    while (rest.length && progress) {
+      progress = false;
+      for (const wd of rest.slice()) {
+        const w = wd[0], opts = [], [r0, r1, c0, c1] = box();
+        cells.forEach((e, k) => { const [r, c] = k.split(",").map(Number);
+          for (let i = 0; i < w.length; i++) if (w[i] === e.ch) for (const d of ["A", "D"]) { if (e[d]) continue;
+            const sr = d === "A" ? r : r - i, sc = d === "A" ? c - i : c, x = fits(w, sr, sc, d); if (!x) continue;
+            const er = d === "D" ? sr + w.length - 1 : sr, ec = d === "A" ? sc + w.length - 1 : sc;
+            if (Math.max(r1, er) - Math.min(r0, sr) < 14 && Math.max(c1, ec) - Math.min(c0, sc) < 14) opts.push([sr, sc, d, x]); } });
+        if (!opts.length) continue;
+        opts.sort((a, b) => b[3] - a[3]);
+        const p = opts[Math.floor(R() * Math.min(4, opts.length))];
+        put(wd, p[0], p[1], p[2]); rest = rest.filter(x => x !== wd); progress = true;
+      }
+    }
+    const [r0, r1, c0, c1] = box(), score = placed.length * 1000 - (r1 - r0 + 1) * (c1 - c0 + 1);
+    if (!best || score > best.score) best = { score, rows: r1 - r0 + 1, cols: c1 - c0 + 1, words: placed.map(p => ({ ...p, r: p.r - r0, c: p.c - c0 })) };
+  }
+  if (best.words.length < 2) return null;
+  const starts = [...new Set(best.words.map(p => p.r * 100 + p.c))].sort((a, b) => a - b);
+  best.words.forEach(p => p.n = starts.indexOf(p.r * 100 + p.c) + 1);
+  return { rows: best.rows, cols: best.cols, words: best.words };
+}
+function makeWordSearch(words) {
+  if (words.length < 3) return null;
+  const N = 11, dirs = [[0, 1], [1, 0], [1, 1]], FILL = "ABCDEFGHIJKLMNOPRSTUVWY";
+  for (let seed = 1; seed < 400; seed++) {
+    const R = rng(seed * 7 + 3), g = Array.from({ length: N }, () => Array(N).fill("")), locs = {};
+    let ok = true;
+    for (const w of words.slice().sort((a, b) => b.length - a.length)) {
+      let done = false;
+      for (let t = 0; t < 250 && !done; t++) {
+        const [dr, dc] = dirs[Math.floor(R() * 3)], r = Math.floor(R() * N), c = Math.floor(R() * N);
+        if (r + dr * (w.length - 1) >= N || c + dc * (w.length - 1) >= N) continue;
+        if ([...w].every((ch, i) => !g[r + dr * i][c + dc * i] || g[r + dr * i][c + dc * i] === ch)) { [...w].forEach((ch, i) => g[r + dr * i][c + dc * i] = ch); locs[w] = [r, c, dr, dc]; done = true; }
+      }
+      if (!done) { ok = false; break; }
+    }
+    if (ok) return { grid: g.map(row => row.map(ch => ch || FILL[Math.floor(R() * FILL.length)]).join("")), words: words.slice(), locs };
+  }
+  return null;
+}
+
+/* the add / edit form */
+const MAXROWS = { story: 10, mc: 10, tf: 10, words: 10, games: 5, links: 4 };
+const v = x => esc(x == null ? "" : x);
+const DEL = `<button type="button" class="rowdel" data-delrow aria-label="Remove this row">✕</button>`;
+const pairRow = (a, b, pa, pb, mx) => `<div class="row pair">${DEL}<input data-f="a" placeholder="${pa}" aria-label="${pa}" value="${v(a)}" ${mx ? `maxlength="${mx}"` : ""}><input data-f="b" placeholder="${pb}" aria-label="${pb}" value="${v(b)}"></div>`;
+const ROW = {
+  story: (s = []) => `<div class="row story">${DEL}<input data-f="emo" aria-label="Picture (one emoji)" placeholder="🌊" value="${v(s[0])}"><input data-f="head" aria-label="Short heading" placeholder="Short heading" value="${v(s[1])}"><textarea data-f="txt" aria-label="What happens" placeholder="What happens, in 1 to 3 short sentences">${v(s[2])}</textarea></div>`,
+  mc: (m = ["", ["", "", "", ""], 0]) => `<div class="row mc">${DEL}<input data-f="q" placeholder="Question" aria-label="Question" value="${v(m[0])}"><div class="opts4">${[0, 1, 2, 3].map(i => `<input data-f="o${i}" placeholder="Answer ${"ABCD"[i]}" aria-label="Answer ${"ABCD"[i]}" value="${v(m[1][i])}">`).join("")}</div><label class="fld inline"><span>Right answer</span><select data-f="a">${[0, 1, 2, 3].map(i => `<option value="${i}" ${m[2] === i ? "selected" : ""}>${"ABCD"[i]}</option>`).join("")}</select></label></div>`,
+  tf: (t = ["", true]) => `<div class="row tf">${DEL}<input data-f="s" placeholder="A sentence about the story" aria-label="Sentence" value="${v(t[0])}"><select data-f="v" aria-label="True or false"><option value="1" ${t[1] ? "selected" : ""}>True</option><option value="0" ${t[1] ? "" : "selected"}>False</option></select></div>`,
+  words: (x = []) => pairRow(x[0], x[1], "Word", "Clue for the crossword", 11),
+  games: (x = []) => pairRow(x[0], x[1], "Game name", "How to play"),
+  links: (x = []) => pairRow(x[0], x[1], "Label", "https:// link")
+};
+const rowsOf = (k, list, min) => { const l = list.slice(0, MAXROWS[k]); while (l.length < min) l.push(undefined); return l.map(x => ROW[k](x)).join(""); };
+const addRowBtn = (k, label) => `<button type="button" class="addrow" data-add="${k}">+ ${label}</button>`;
+let editing = null;
+const SECS = [["verse", "Memory verse"], ["mc", "Quiz"], ["tf", "True or False"], ["words", "Crossword and word search"], ["talk", "Talk questions"], ["games", "Games"], ["craft", "Craft"], ["links", "Links"], ["prayer", "Prayer"]];
+const willShare = () => editing ? editing.source === "shared" : (!!db && canShared !== false);
+function formHTML(d) {
+  const w = d ? d.week : {}, cr = w.craft || {}, sel = d ? d.seriesId : series;
+  const full = x => !!x && (Array.isArray(x) ? x.length > 0 : true);
+  const keep = d ? { verse: full(w.verse), mc: full(w.mc), tf: full(w.tf), words: full(d.words), talk: full((w.discussion || []).concat(w.challenge || [])), games: full(w.games), craft: !!(cr.name || full(cr.steps)), links: full(w.links), prayer: full(w.prayer) } : Object.fromEntries(SECS.map(([k]) => [k, true]));
+  const sec = (k, label, small, body) => `<details class="fs" data-sec="${k}" open ${keep[k] ? "" : "hidden"}><summary><span class="sumtxt">${label}${small ? ` <small>${small}</small>` : ""}</span><button type="button" class="secdel" data-delsec="${k}">✕ Remove section</button></summary>${body}</details>`;
+  return `<div class="head"><div><h2 id="addTitle">${d ? "Edit lesson" : "Add a lesson"}</h2><p class="hint">${willShare() ? "Everyone who opens this page will see it. Only the title, reference, big idea and one story part are needed." : "This lesson saves in this browser only. To get it onto the page for everyone, tap “Copy to share” after saving and send it to the page owner."}</p></div><button type="button" class="x" data-close aria-label="Close">✕</button></div>
+  <fieldset class="fs"><legend>The basics</legend><div class="grid2">
+    <label class="fld"><span>Series</span><select id="f-series">${SERIES.map(x => `<option value="${x.id}" ${x.id === sel ? "selected" : ""}>${esc(x.name)}</option>`).join("")}<option value="__new">➕ Start a new series</option></select></label>
+    <label class="fld" id="f-newwrap" hidden><span>New series name <small>(like “Luke 15”)</small></span><input id="f-newname" maxlength="60"></label>
+    <label class="fld"><span>Lesson title</span><input id="f-title" maxlength="120" value="${v(w.title)}" placeholder="The Lost Sheep"></label>
+    <label class="fld"><span>Bible reference</span><input id="f-ref" maxlength="80" value="${v(w.ref)}" placeholder="Luke 15:1-7"></label>
+    <label class="fld"><span>Picture <small>(one emoji)</small></span><input id="f-emoji" maxlength="8" value="${v(w.emoji)}" placeholder="🐑"></label>
+    <label class="fld"><span>Week button name <small>(short, optional)</small></span><input id="f-short" maxlength="40" value="${v(w.short)}" placeholder="Lost Sheep"></label>
+  </div><label class="fld" style="margin-top:12px"><span>Big idea <small>(one sentence kids can remember)</small></span><input id="f-big" maxlength="300" value="${v(w.bigIdea)}" placeholder="Jesus looks for every one of us."></label></fieldset>
+  <details class="fs" open><summary>📖 Story <small>up to 10 parts</small></summary><div class="rows" data-rows="story">${rowsOf("story", w.story || [], 6)}</div>${addRowBtn("story", "Add a part")}</details>
+  <p class="hint">Don't need a section? Tap ✕ Remove section. Kids only see the tabs you keep.</p>
+  ${sec("verse", "💬 Memory verse", "", `<div class="grid2"><label class="fld" style="grid-column:1/-1"><span>Verse</span><textarea id="f-verse" maxlength="400">${v(w.verse)}</textarea></label><label class="fld"><span>Reference</span><input id="f-vref" maxlength="60" value="${v(w.verseRef)}" placeholder="Luke 19:10"></label></div>`)}
+  ${sec("mc", "🔵 Quiz", "4 answers each", `<div class="rows" data-rows="mc">${rowsOf("mc", w.mc || [], 3)}</div>${addRowBtn("mc", "Add a question")}`)}
+  ${sec("tf", "✅ True or False", "", `<div class="rows" data-rows="tf">${rowsOf("tf", w.tf || [], 3)}</div>${addRowBtn("tf", "Add a sentence")}`)}
+  ${sec("words", "✏️ Crossword and 🔍 word search", "built for you", `<p class="hint">One word per row, letters only, up to 11 letters. Add a clue for the crossword. 3 or more words makes a word search, 2 or more with clues makes a crossword.</p><div class="rows" data-rows="words">${rowsOf("words", (d && d.words) || [], 6)}</div>${addRowBtn("words", "Add a word")}`)}
+  ${sec("talk", "💭 Talk questions", "", `<label class="fld"><span>Questions for everyone <small>(one per line)</small></span><textarea id="f-disc">${v((w.discussion || []).join("\n"))}</textarea></label><label class="fld" style="margin-top:12px"><span>⭐ Challenge questions for ages 10-13 <small>(one per line)</small></span><textarea id="f-chal">${v((w.challenge || []).join("\n"))}</textarea></label>`)}
+  ${sec("games", "🎮 Games", "", `<div class="rows" data-rows="games">${rowsOf("games", w.games || [], 2)}</div>${addRowBtn("games", "Add a game")}`)}
+  ${sec("craft", "✂️ Craft", "", `<div class="grid2"><label class="fld"><span>Craft name</span><input id="f-craft" maxlength="100" value="${v(cr.name)}"></label><label class="fld"><span>Supplies <small>(one per line)</small></span><textarea id="f-supplies">${v((cr.supplies || []).join("\n"))}</textarea></label></div><label class="fld" style="margin-top:12px"><span>Craft steps <small>(one per line)</small></span><textarea id="f-steps">${v((cr.steps || []).join("\n"))}</textarea></label>`)}
+  ${sec("links", "🔗 Craft or printable links", "must start with https://", `<div class="rows" data-rows="links">${rowsOf("links", w.links || [], 2)}</div>${addRowBtn("links", "Add a link")}`)}
+  ${sec("prayer", "🙏 Closing prayer", "", `<textarea id="f-prayer" maxlength="800" aria-label="Closing prayer">${v(w.prayer)}</textarea>`)}
+  <div class="secbar" id="secbar" ${SECS.some(([k]) => !keep[k]) ? "" : "hidden"}><span class="hint">Add a section back:</span>${SECS.map(([k, l]) => `<button type="button" class="addrow" data-addsec="${k}" ${keep[k] ? "hidden" : ""}>+ ${l}</button>`).join("")}</div>
+  <div class="foot"><span class="msg" id="f-msg" role="status"></span><button type="button" class="btn ghost" data-close>Cancel</button><button type="submit" class="btn" id="f-save">Save lesson</button></div>`;
+}
+function openForm(doc) {
+  editing = doc ? { key: doc.key, source: doc.source, at: doc.at, by: doc.by } : null;
+  const f = $("#addForm"); f.innerHTML = formHTML(doc);
+  const s = f.querySelector("#f-series"); s.addEventListener("change", () => { f.querySelector("#f-newwrap").hidden = s.value !== "__new"; });
+  $("#addDlg").showModal(); f.querySelector("#f-title").focus();
+}
+function collect() {
+  const f = $("#addForm"), on = k => { const el = f.querySelector(`[data-sec="${k}"]`); return !el || !el.hidden; };
+  const SECOF = { "#f-verse": "verse", "#f-vref": "verse", "#f-disc": "talk", "#f-chal": "talk", "#f-craft": "craft", "#f-supplies": "craft", "#f-steps": "craft", "#f-prayer": "prayer" };
+  const val = id => SECOF[id] && !on(SECOF[id]) ? "" : (f.querySelector(id)?.value || "").trim();
+  const lines = id => val(id).split("\n").map(x => x.trim()).filter(Boolean);
+  const rows = k => k !== "story" && !on(k) ? [] : [...f.querySelectorAll(`[data-rows="${k}"] .row`)].map(r => { const o = {}; r.querySelectorAll("[data-f]").forEach(el => o[el.dataset.f] = el.value.trim()); return o; });
+  const title = val("#f-title"), ref = val("#f-ref"), bigIdea = val("#f-big");
+  if (!title || !ref || !bigIdea) return { error: "Please add a lesson title, Bible reference and big idea." };
+  let seriesId = val("#f-series"), seriesName = "";
+  if (seriesId === "__new") {
+    seriesName = val("#f-newname"); if (!seriesName) return { error: "Please name the new series." };
+    const same = SERIES.find(x => x.name.toLowerCase() === seriesName.toLowerCase());
+    seriesId = same ? same.id : (seriesName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 50) || "lessons");
+    if (same) seriesName = same.name;
+  } else seriesName = (SERIES.find(x => x.id === seriesId) || {}).name || "";
+  const story = rows("story").filter(r => r.head || r.txt).map(r => [[...r.emo].slice(0, 2).join("") || "📖", r.head, r.txt]);
+  if (!story.length) return { error: "Please write at least one story part." };
+  const mcRows = rows("mc").filter(r => r.q || r.o0 || r.o1 || r.o2 || r.o3);
+  if (mcRows.some(r => !(r.q && r.o0 && r.o1 && r.o2 && r.o3))) return { error: "Each quiz question needs the question and all 4 answers (or leave the row empty)." };
+  const wordRows = rows("words").map(r => [r.a.toUpperCase().replace(/[^A-Z]/g, ""), r.b]).filter(r => r[0] || r[1]);
+  if (wordRows.some(r => r[0].length < 2 || r[0].length > 11)) return { error: "Each puzzle word should be one word of 2 to 11 letters." };
+  const seen = new Set(), words = wordRows.filter(r => !seen.has(r[0]) && seen.add(r[0]));
+  const links = rows("links").filter(r => r.a || r.b);
+  if (links.some(r => !/^https:\/\/[^\s"'<>]+$/.test(r.b) || !r.a)) return { error: "Each link needs a label and a web address starting with https://" };
+  const withClue = words.filter(r => r[1]);
+  const week = {
+    title, ref, bigIdea, short: val("#f-short"), emoji: [...val("#f-emoji")].slice(0, 2).join("") || "🌸",
+    verse: val("#f-verse").replace(/\s+/g, " "), verseRef: val("#f-vref"), story,
+    mc: mcRows.map(r => [r.q, [r.o0, r.o1, r.o2, r.o3], +r.a]),
+    tf: rows("tf").filter(r => r.s).map(r => [r.s, r.v === "1"]),
+    discussion: lines("#f-disc"), challenge: lines("#f-chal"),
+    games: rows("games").filter(r => r.a || r.b).map(r => [r.a || "Game", r.b]),
+    craft: { name: val("#f-craft"), supplies: lines("#f-supplies"), steps: lines("#f-steps") },
+    links: links.map(r => [r.a, r.b]), prayer: val("#f-prayer"),
+    crossword: makeCrossword(withClue), wordsearch: makeWordSearch(words.map(r => r[0]))
+  };
+  return { seriesId, seriesName, week, words };
+}
+async function saveLesson(e) {
+  e.preventDefault();
+  const msg = $("#f-msg"), btn = $("#f-save"), say = (t, bad) => { msg.textContent = t; msg.className = "msg" + (bad ? " bad" : ""); };
+  const r = collect(); if (r.error) return say(r.error, true);
+  const doc = { seriesId: r.seriesId, seriesName: r.seriesName, week: r.week, words: r.words, at: editing ? editing.at : Date.now(), by: editing ? editing.by : (me || null) };
+  btn.disabled = true; say("Saving...");
+  let key = editing ? editing.key : null, source = willShare() ? "shared" : "local";
+  if (source === "shared") {
+    try {
+      const ref = key ? db.collection("lessons").doc(key) : db.collection("lessons").doc();
+      await ref.set(doc); key = ref.id;
+      SHARED = SHARED.filter(d => d.key !== key).concat({ ...doc, key });
+    } catch (err) {
+      if (!editing && err && err.code === "invalid_argument") { canShared = false; source = "local"; key = null; }
+      else { btn.disabled = false; return say(err && err.code === "quota_exceeded" ? "The page is full. Remove an old added lesson and try again." : "Could not save right now. Please try again.", true); }
+    }
+  }
+  if (source === "local") {
+    key = key || "local-" + Date.now().toString(36);
+    LOCAL = LOCAL.filter(d => d.key !== key).concat({ ...doc, key });
+    if (!saveLocal()) { btn.disabled = false; return say("This browser can't save lessons. Try another browser.", true); }
+  }
+  $("#addDlg").close(); rebuild(); setSeries(r.seriesId); document.body.classList.remove("home"); $("#homeView").hidden = true;
+  const i = WEEKS.findIndex(w => w.added && w.added.key === key); week = i > -1 ? i + 1 : 1; section = "story";
+  const st0 = st[series + ":" + week]; if (st0) delete st[series + ":" + week];
+  render(); window.scrollTo({ top: 0, behavior: "smooth" });
+  if (source === "local") { const m = $("#minemsg"); if (m) m.textContent = editing || willShare() ? "Saved." : "Saved on this device. Tap “Copy to share” to send it to the page owner."; }
+}
+$("#addForm").addEventListener("submit", saveLesson);
+$("#addForm").addEventListener("click", e => {
+  if (e.target.closest("[data-close]")) return $("#addDlg").close();
+  const f = $("#addForm"), bar = f.querySelector("#secbar");
+  const ds = e.target.closest("[data-delsec]");
+  if (ds) { e.preventDefault(); const k = ds.dataset.delsec; f.querySelector(`[data-sec="${k}"]`).hidden = true; f.querySelector(`[data-addsec="${k}"]`).hidden = false; bar.hidden = false; return; }
+  const as = e.target.closest("[data-addsec]");
+  if (as) { const k = as.dataset.addsec, el = f.querySelector(`[data-sec="${k}"]`); el.hidden = false; el.open = true; as.hidden = true; bar.hidden = ![...bar.querySelectorAll("[data-addsec]")].some(x => !x.hidden); el.scrollIntoView({ block: "nearest", behavior: "smooth" }); return; }
+  const dr = e.target.closest("[data-delrow]");
+  if (dr) { const box = dr.closest("[data-rows]"); dr.closest(".row").remove(); const ab = f.querySelector(`[data-add="${box.dataset.rows}"]`); if (ab) ab.hidden = false; return; }
+  const b = e.target.closest("[data-add]"); if (!b) return;
+  const k = b.dataset.add, box = $("#addForm").querySelector(`[data-rows="${k}"]`);
+  if (box.children.length < MAXROWS[k]) { box.insertAdjacentHTML("beforeend", ROW[k]()); box.lastElementChild.querySelector("input,textarea")?.focus(); }
+  if (box.children.length >= MAXROWS[k]) b.hidden = true;
+});
+
+let removeArmed = false;
+$("#hero").addEventListener("click", async e => {
+  const b = e.target.closest("[data-mine]"); if (!b) return;
+  const w = W(); if (!w.added) return;
+  const doc = findDoc(w.added), m = $("#minemsg"); if (!doc) return;
+  const act = b.dataset.mine;
+  if (act === "edit") return openForm({ ...doc, source: w.added.source });
+  if (act === "copy") { try { await navigator.clipboard.writeText(JSON.stringify({ bloomersLesson: 1, ...doc, key: undefined })); m.textContent = "Copied. Paste it in a message to the page owner."; } catch (err) { m.textContent = "Copy did not work in this browser."; } return; }
+  if (act === "del") {
+    if (!removeArmed) { removeArmed = true; b.textContent = "Tap again to remove"; setTimeout(() => { removeArmed = false; if (b.isConnected) b.textContent = "Remove"; }, 4000); return; }
+    removeArmed = false;
+    try {
+      if (w.added.source === "shared") { await db.collection("lessons").doc(w.added.key).delete(); SHARED = SHARED.filter(d => d.key !== w.added.key); }
+      else { LOCAL = LOCAL.filter(d => d.key !== w.added.key); saveLocal(); }
+      Object.keys(st).forEach(k => { if (k.startsWith(series + ":")) delete st[k]; });
+      rebuild(); if (week > WEEKS.length) week = Math.max(1, WEEKS.length); render();
+    } catch (err) { m.textContent = "Could not remove it right now."; }
+  }
+});
+
+let pending = null;
+function applyPos(p) { if (!p || !SERIES.some(x => x.id === p.series)) return false; setSeries(p.series); week = p.week && p.week <= WEEKS.length ? p.week : 1; if (p.section) section = p.section; return true; }
+try { const saved = JSON.parse(localStorage.getItem("bloomers-pos") || "{}"); if (saved.series && !applyPos(saved)) pending = saved; } catch (e) {}
+const hashRaw = (location.hash || "").slice(1), hm = hashRaw.match(/^(.+)-w(\d+)$/), hashId = hm ? hm[1] : hashRaw, hashWeek = hm ? +hm[2] : 1; if (hashId) { pending = { series: hashId, week: hashWeek, section: "story" }; if (SERIES.some(x => x.id === hashId)) { applyPos(pending); pending = null; } }
+function save() { try { localStorage.setItem("bloomers-pos", JSON.stringify({ series, week, section })); } catch (e) {} }
+
+function renderTop() {
+  document.body.dataset.week = ((week - 1) % 5) + 1;
+  const cur = SERIES.find(x => x.id === series);
+  $("#brandname").textContent = "Bloomers · " + cur.name;
+  $("#series").innerHTML = SERIES.map(x => `<option value="${x.id}" ${x.id === series ? "selected" : ""}>${esc(x.name)}</option>`).join("");
+  $("#weeks").innerHTML = WEEKS.map(w => `<button class="weekbtn" aria-pressed="${w.id === week}" data-w="${w.id}"><span class="n">${w.id}</span>${esc(w.short)}</button>`).join("");
+  const w = W();
+  $("#hero").innerHTML = `<div class="big" aria-hidden="true">${esc(w.emoji)}</div><div><div class="ref">Week ${w.id} · ${esc(w.ref)}</div><h1>${esc(w.title)}</h1><p><strong>Big idea:</strong> ${esc(w.bigIdea)}</p>${(w.files || []).length ? `<div class="printables">${w.files.map(([label, kind, path], i) => `<a class="dl" href="${esc(path)}" target="_blank" rel="noopener" data-dl="${i}">${label} <small>${kind}</small></a>`).join("")}<span class="dlmsg" id="dlmsg" aria-live="polite"></span></div>` : ""}${tButton(cur, w)}${w.added ? `<div class="mine"><span class="tag">${w.added.source === "local" ? "Saved on this device" : "Added lesson"}</span>${canModify(w) ? `<button class="minibtn" data-mine="edit">✏️ Edit</button><button class="minibtn" data-mine="del">Remove</button>` : ""}${w.added.source === "local" ? `<button class="minibtn" data-mine="copy">📋 Copy to share</button>` : ""}<span class="dlmsg" id="minemsg" aria-live="polite"></span></div>` : ""}</div>`;
+  $("#tabs").innerHTML = avail().map(([k, l]) => `<button class="tab" role="tab" aria-selected="${k === section}" data-s="${k}">${l}</button>`).join("");
+}
+let downloadsApi = null;
+(async () => { try { downloadsApi = await window.claude?.use?.("downloads"); } catch (e) { downloadsApi = null; } })();
+$("#hero").addEventListener("click", async e => {
+  const a = e.target.closest("[data-dl]"); if (!a || !downloadsApi) return;
+  e.preventDefault();
+  const [, , path, filename] = W().files[+a.dataset.dl];
+  const msg = $("#dlmsg");
+  try {
+    msg.textContent = "Getting the file ready...";
+    const res = await fetch(path); if (!res.ok) throw new Error("fetch");
+    const blob = await res.blob();
+    await downloadsApi.save({ filename, data: blob });
+    msg.textContent = "Saved to your downloads.";
+  } catch (err) {
+    msg.textContent = err && err.code === "declined" ? "" : err && err.code === "rate_limited" ? "One moment, a save box is already open." : "Could not save the file here. Try opening it on a computer.";
+  }
+});
+$("#series").addEventListener("change", e => { setSeries(e.target.value); week = 1; section = "story"; render(); });
+$("#weeks").addEventListener("click", e => { const b = e.target.closest("[data-w]"); if (!b) return; week = +b.dataset.w; render(); });
+$("#tabs").addEventListener("click", e => { const b = e.target.closest("[data-s]"); if (!b) return; section = b.dataset.s; render(); });
+
+function avail() { const w = W(); return SECTIONS.filter(([k]) => k === "story" ? (w.story || []).length > 0 : k === "verse" ? !!w.verse : k === "quiz" ? (w.mc || []).length > 0 : k === "tf" ? (w.tf || []).length > 0 : k === "cross" ? !!(w.crossword && w.crossword.words.length) : k === "search" ? !!(w.wordsearch && w.wordsearch.words.length) : true); }
+function nextSection() { const a = avail(), i = a.findIndex(s => s[0] === section); if (i > -1 && i < a.length - 1) { section = a[i + 1][0]; render(); window.scrollTo({ top: 0, behavior: "smooth" }); } }
+const nextBtn = label => { const a = avail(), i = a.findIndex(s => s[0] === section), nx = a[i + 1]; if (!nx) return ""; const di = SECTIONS.findIndex(s => s[0] === section), usual = SECTIONS[di + 1] && SECTIONS[di + 1][0] === nx[0]; return `<button class="btn" data-act="nextsec">${usual ? label : nx[1].replace(/^\S+\s/, "")} →</button>`; };
+
+/* ---------- story ---------- */
+const storyLen = w => w.story.length + (w.takeaways && w.takeaways.length ? 1 : 0);
+function story() {
+  const w = W(), s = S(), n = storyLen(w);
+  const isRecap = s.scene >= w.story.length;
+  const body = isRecap
+    ? `<div class="scene anim recap" key="recap"><div class="art" aria-hidden="true">📝</div>
+  <div><div class="step">Part ${n} of ${n} · Lesson recap</div><h3>What We Learned</h3><ul>${w.takeaways.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div></div>`
+    : (() => { const [emo, head, txt] = w.story[s.scene]; return `<div class="scene anim" key="${s.scene}"><div class="art" aria-hidden="true">${esc(emo)}</div>
+  <div><div class="step">Part ${s.scene + 1} of ${n}</div><h3>${esc(head)}</h3><p>${esc(txt)}</p></div></div>`; })();
+  return `<h2>The Story</h2><p class="lead">${esc(w.ref)} · tap Next to move through the story</p>
+  ${body}
+  <div class="nav"><button class="btn ghost" data-act="sprev" ${s.scene === 0 ? "disabled" : ""}>← Back</button>
+  <div class="dots">${Array.from({ length: n }, (_, i) => `<button class="dot" aria-label="Part ${i + 1}" aria-current="${i === s.scene}" data-act="sgo" data-i="${i}"></button>`).join("")}</div>
+  ${s.scene < n - 1 ? `<button class="btn" data-act="snext">Next →</button>` : nextBtn("Memory verse")}</div>`;
+}
+
+/* ---------- verse ---------- */
+function verseWords() { return W().verse.split(" "); }
+function verse() {
+  const w = W(), s = S(), words = verseWords();
+  if (!s.verseOrder) s.verseOrder = shuffle(words.map((_, i) => i), week * 31 + 7);
+  const mode = `<div class="mode"><button class="btn ${s.vmode === "build" ? "" : "ghost"}" data-act="vmode" data-m="build">Build the verse</button><button class="btn ${s.vmode === "hide" ? "" : "ghost"}" data-act="vmode" data-m="hide">Hide the words</button></div>`;
+  let body;
+  if (s.vmode === "build") {
+    const done = s.verseBuilt.length === words.length;
+    body = `<p class="lead">Tap the words in the right order. ${esc(w.verseRef)}</p>
+    <div class="verse-target ${done ? "done" : ""}">${s.verseBuilt.map(i => `<span class="chip placed">${esc(words[i])}</span>`).join("") || `<span style="color:var(--muted)">The verse will grow here...</span>`}</div>
+    <div class="chips">${s.verseOrder.filter(i => !s.verseBuilt.includes(i)).map(i => `<button class="chip" data-act="vword" data-i="${i}">${esc(words[i])}</button>`).join("")}</div>
+    <div class="status ${done ? "good" : ""}">${done ? `🎉 You did it! "${esc(w.verse)}" ${esc(w.verseRef)}` : ""}</div>
+    <div class="row-btns"><button class="btn ghost" data-act="vreset">Start over</button></div>`;
+  } else {
+    body = `<p class="lead">Say the verse together. Tap "Hide a word" and say it again. Tap a blank to peek.</p>
+    <div class="verse-full">${words.map((wd, i) => s.gaps.includes(i) ? `<span class="gap" data-act="peek">${esc(wd)}</span>` : esc(wd)).join(" ")}<div style="font-size:.6em;color:var(--accent);margin-top:10px">${esc(w.verseRef)}</div></div>
+    <div class="row-btns"><button class="btn" data-act="vhide" ${s.gaps.length === words.length ? "disabled" : ""}>Hide a word</button><button class="btn ghost" data-act="vshow">Show all</button></div>`;
+  }
+  return `<h2>Memory Verse</h2>${mode}${body}<div class="nav"><span></span>${nextBtn("Quiz time")}</div>`;
+}
+
+/* ---------- quiz ---------- */
+function quiz() {
+  const w = W(), s = S(), n = w.mc.length;
+  if (s.q >= n) return `<div class="score"><div class="num">${s.qScore}/${n}</div><p>${s.qScore === n ? "Perfect score! 🌟" : s.qScore >= n - 2 ? "Great job, Bloomers! 🌸" : "Good try! Let's look at the story again."}</p><div class="row-btns" style="justify-content:center"><button class="btn ghost" data-act="qreset">Play again</button>${nextBtn("True or False")}</div></div>`;
+  const [q, opts, a] = w.mc[s.q], picked = s.qPicked;
+  return `<div class="qcount">Question ${s.q + 1} of ${n} · Score ${s.qScore}</div><div class="question">${esc(q)}</div>
+  <div class="opts">${opts.map((o, i) => `<button class="opt ${picked !== null && i === a ? "right" : ""} ${picked === i && i !== a ? "wrongpick" : ""}" data-act="qpick" data-i="${i}" ${picked !== null ? "disabled" : ""}><span class="letter">${"ABCD"[i]}</span>${esc(o)}</button>`).join("")}</div>
+  <div class="feedback ${picked === null ? "" : picked === a ? "good" : "bad"}">${picked === null ? "" : picked === a ? "✓ That's right!" : `Not quite. The answer is ${"ABCD"[a]}.`}</div>
+  <div class="nav"><span></span>${picked !== null ? `<button class="btn" data-act="qnext">${s.q === n - 1 ? "See score" : "Next question"} →</button>` : ""}</div>`;
+}
+
+/* ---------- true / false ---------- */
+function tf() {
+  const w = W(), s = S(), n = w.tf.length;
+  if (s.t >= n) return `<div class="score"><div class="num">${s.tScore}/${n}</div><p>${s.tScore === n ? "You know this story! 🌟" : "Nice work! 🌸"}</p><div class="row-btns" style="justify-content:center"><button class="btn ghost" data-act="treset">Play again</button>${nextBtn("Crossword")}</div></div>`;
+  const [q, v] = w.tf[s.t], p = s.tPicked;
+  const cls = val => p === null ? "" : val === v ? "right" : p === val ? "wrongpick" : "";
+  return `<div class="qcount">Sentence ${s.t + 1} of ${n} · Score ${s.tScore}</div><div class="question">${esc(q)}</div>
+  <div class="tfbtns"><button class="tfbtn ${cls(true)}" data-act="tpick" data-v="1" ${p !== null ? "disabled" : ""}>👍 TRUE</button><button class="tfbtn ${cls(false)}" data-act="tpick" data-v="0" ${p !== null ? "disabled" : ""}>👎 FALSE</button></div>
+  <div class="feedback ${p === null ? "" : p === v ? "good" : "bad"}">${p === null ? "" : p === v ? "✓ Correct!" : `Oops! It's ${v ? "TRUE" : "FALSE"}.`}</div>
+  <div class="nav"><span></span>${p !== null ? `<button class="btn" data-act="tnext">${s.t === n - 1 ? "See score" : "Next"} →</button>` : ""}</div>`;
+}
+
+/* ---------- crossword ---------- */
+let cwActive = null;
+function cwCells(wd) { const [dr, dc] = wd.d === "A" ? [0, 1] : [1, 0]; return [...wd.word].map((ch, i) => [wd.r + dr * i, wd.c + dc * i, ch]); }
+function cross() {
+  const cw = W().crossword, s = S();
+  const map = {}, nums = {};
+  cw.words.forEach(wd => { nums[wd.r + "," + wd.c] = wd.n; cwCells(wd).forEach(([r, c, ch]) => map[r + "," + c] = ch); });
+  let cells = "";
+  for (let r = 0; r < cw.rows; r++) for (let c = 0; c < cw.cols; c++) {
+    const k = r + "," + c;
+    cells += map[k] ? `<div class="cell">${nums[k] ? `<span class="num">${nums[k]}</span>` : ""}<input id="cw-${week}-${r}-${c}" data-k="${k}" maxlength="1" value="${esc(s.cwVals[k] || "")}" aria-label="Row ${r + 1} column ${c + 1}" autocomplete="off"></div>` : `<div></div>`;
+  }
+  const solved = wd => cwCells(wd).every(([r, c, ch]) => (s.cwVals[r + "," + c] || "").toUpperCase() === ch);
+  const list = d => cw.words.map((wd, i) => wd.d === d ? `<li><button class="clue ${solved(wd) ? "solved" : ""}" data-act="clue" data-i="${i}"><b>${wd.n}</b>${esc(wd.clue)} (${wd.word.length})</button></li>` : "").join("");
+  return `<h2>Crossword</h2><p class="lead">Tap a clue to light up its squares, then type the answer.</p>
+  <div class="cw-layout"><div class="cw-scroll"><div class="cw" style="grid-template-columns:repeat(${cw.cols}, auto)">${cells}</div></div>
+  <div class="clues"><h3>➡️ Across</h3><ol>${list("A")}</ol><h3>⬇️ Down</h3><ol>${list("D")}</ol></div></div>
+  <div class="row-btns"><button class="btn" data-act="cwcheck">Check answers</button><button class="btn ghost" data-act="cwreveal">Show answers</button><button class="btn ghost" data-act="cwclear">Clear</button></div>
+  <div class="status" id="cwstatus"></div><div class="nav"><span></span>${nextBtn("Word search")}</div>`;
+}
+function cwHighlight(i) {
+  cwActive = i; const wd = W().crossword.words[i];
+  document.querySelectorAll(".cell input").forEach(x => x.classList.remove("hl"));
+  document.querySelectorAll(".clue").forEach(x => x.classList.toggle("active", +x.dataset.i === i));
+  cwCells(wd).forEach(([r, c]) => { const el = document.getElementById(`cw-${week}-${r}-${c}`); el && el.classList.add("hl"); });
+}
+document.addEventListener("input", e => {
+  if (!e.target.matches(".cell input")) return;
+  const el = e.target, k = el.dataset.k; el.value = el.value.slice(-1).toUpperCase(); S().cwVals[k] = el.value; el.classList.remove("ok", "no");
+  if (el.value && cwActive !== null) { const cells = cwCells(W().crossword.words[cwActive]); const idx = cells.findIndex(([r, c]) => r + "," + c === k);
+    if (idx > -1 && idx < cells.length - 1) { const [r, c] = cells[idx + 1]; document.getElementById(`cw-${week}-${r}-${c}`)?.focus(); } }
+  const cw = W().crossword;
+  document.querySelectorAll(".clue").forEach(b => { const wd = cw.words[+b.dataset.i]; b.classList.toggle("solved", cwCells(wd).every(([r, c, ch]) => (S().cwVals[r + "," + c] || "") === ch)); });
+});
+document.addEventListener("focusin", e => {
+  if (!e.target.matches(".cell input")) return;
+  const k = e.target.dataset.k, cw = W().crossword;
+  if (cwActive !== null && cwCells(cw.words[cwActive]).some(([r, c]) => r + "," + c === k)) return;
+  const i = cw.words.findIndex(wd => cwCells(wd).some(([r, c]) => r + "," + c === k)); if (i > -1) cwHighlight(i);
+});
+
+/* ---------- word search ---------- */
+let wsStart = null;
+function search() {
+  const ws = W().wordsearch, s = S(), n = ws.grid.length;
+  const foundCells = new Set();
+  s.found.forEach(wd => { const [r, c, dr, dc] = ws.locs[wd]; for (let i = 0; i < wd.length; i++) foundCells.add((r + dr * i) + "," + (c + dc * i)); });
+  let cells = "";
+  ws.grid.forEach((row, r) => [...row].forEach((ch, c) => { const k = r + "," + c; cells += `<button data-act="ws" data-r="${r}" data-c="${c}" class="${foundCells.has(k) ? "found" : ""} ${wsStart && wsStart[0] === r && wsStart[1] === c ? "sel" : ""}" aria-label="${ch}">${ch}</button>`; }));
+  const all = s.found.length === ws.words.length;
+  return `<h2>Word Search</h2><p class="lead">Tap the first letter of a word, then tap the last letter. Words go across, down, or slanted.</p>
+  <div class="ws-layout"><div class="cw-scroll"><div class="ws" style="grid-template-columns:repeat(${n}, auto)">${cells}</div></div>
+  <div><div class="wordlist">${ws.words.map(wd => `<span class="${s.found.includes(wd) ? "found" : ""}">${wd}</span>`).join("")}</div>
+  <div class="status ${all ? "good" : ""}">${all ? "🎉 You found them all!" : `Found ${s.found.length} of ${ws.words.length}`}</div>
+  <div class="row-btns"><button class="btn ghost" data-act="wsreset">Start over</button></div></div></div>
+  <div class="nav"><span></span>${nextBtn("Talk & games")}</div>`;
+}
+function wsPick(r, c) {
+  const ws = W().wordsearch, s = S();
+  if (!wsStart) { wsStart = [r, c]; return; }
+  const [r0, c0] = wsStart; wsStart = null;
+  for (const wd of ws.words) { if (s.found.includes(wd)) continue; const [wr, wc, dr, dc] = ws.locs[wd]; const er = wr + dr * (wd.length - 1), ec = wc + dc * (wd.length - 1);
+    if ((r0 === wr && c0 === wc && r === er && c === ec) || (r === wr && c === wc && r0 === er && c0 === ec)) { s.found.push(wd); return; } }
+}
+
+/* ---------- talk & games ---------- */
+function talk() {
+  const w = W(), s = S();
+  const qs = [...(w.discussion || []).map(q => [q, false]), ...(w.challenge || []).map(q => [q, true])];
+  const craft = w.craft && (w.craft.name || (w.craft.steps || []).length) ? w.craft : null;
+  const out = [];
+  if (qs.length) out.push(`<h2>Let's Talk</h2><p class="lead">Tap a card to show the question.${(w.challenge || []).length ? " ⭐ cards are challenge questions for ages 10-13." : ""}</p>
+  <div class="cards">${qs.map(([q, star], i) => `<button class="flip ${star ? "star" : ""} ${s.revealed.includes(i) ? "" : "hide"}" data-act="flip" data-i="${i}"><span class="lbl">${star ? "⭐ Challenge" : "Question " + (i + 1)}</span><span class="q">${s.revealed.includes(i) ? esc(q) : "Tap to show the question so nobody peeks early"}</span></button>`).join("")}</div>`);
+  else out.push(`<h2>Talk & Games</h2>`);
+  if ((w.games || []).length) out.push(`<h3 class="sub">🎮 Games</h3><div class="games">${w.games.map(([n, h]) => `<div class="game"><h3>${esc(n)}</h3><p>${esc(h)}</p></div>`).join("")}</div>`);
+  if (craft) out.push(`<h3 class="sub">✂️ Craft${craft.name ? ": " + esc(craft.name) : ""}</h3>${w.added && (craft.supplies || []).length ? `<p style="margin-top:0"><strong>You need:</strong> ${craft.supplies.map(esc).join(", ")}</p>` : ""}<p style="margin-top:0">${(craft.steps || []).map(esc).join(" ")}</p>`);
+  if ((w.links || []).length) out.push(`<ul class="links">${w.links.map(([l, u]) => `<li><a href="${esc(u)}" target="_blank" rel="noopener">${esc(l)} ↗</a></li>`).join("")}</ul>`);
+  if (w.prayer) out.push(`<div class="prayer"><b>🙏 Let's pray</b>${esc(w.prayer)}</div>`);
+  if (out.length === 1 && !qs.length) out.push(`<p class="empty">Nothing here yet for this lesson.</p>`);
+  return out.join("\n  ");
+}
+
+const RENDER = { story, verse, quiz, tf, cross, search, talk };
+function render() { if (!avail().some(s => s[0] === section)) section = avail()[0][0]; renderTop(); cwActive = null; wsStart = null; $("#panel").innerHTML = RENDER[section](); save(); }
+function rerender() { $("#panel").innerHTML = RENDER[section](); }
+
+$("#panel").addEventListener("click", e => {
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  const s = S(), w = W(), a = b.dataset.act, i = +b.dataset.i;
+  switch (a) {
+    case "nextsec": return nextSection();
+    case "snext": s.scene++; break; case "sprev": s.scene--; break; case "sgo": s.scene = i; break;
+    case "vmode": s.vmode = b.dataset.m; break;
+    case "vword": if (verseWords()[i] === verseWords()[s.verseBuilt.length]) { s.verseBuilt.push(s.verseBuilt.length); } else { b.classList.remove("wrong"); void b.offsetWidth; b.classList.add("wrong"); return; } break;
+    case "vreset": s.verseBuilt = []; break;
+    case "vhide": { const left = verseWords().map((_, k) => k).filter(k => !s.gaps.includes(k)); s.gaps.push(left[Math.floor(Math.random() * left.length)]); break; }
+    case "vshow": s.gaps = []; break;
+    case "peek": b.classList.toggle("show"); return;
+    case "qpick": s.qPicked = i; if (i === w.mc[s.q][2]) s.qScore++; break;
+    case "qnext": s.q++; s.qPicked = null; break;
+    case "qreset": s.q = 0; s.qScore = 0; s.qPicked = null; break;
+    case "tpick": { const v = b.dataset.v === "1"; s.tPicked = v; if (v === w.tf[s.t][1]) s.tScore++; break; }
+    case "tnext": s.t++; s.tPicked = null; break;
+    case "treset": s.t = 0; s.tScore = 0; s.tPicked = null; break;
+    case "clue": { cwHighlight(i); const [r, c] = cwCells(w.crossword.words[i]).find(([r, c]) => !S().cwVals[r + "," + c]) || cwCells(w.crossword.words[i])[0]; document.getElementById(`cw-${week}-${r}-${c}`)?.focus(); return; }
+    case "cwcheck": { let right = 0, total = 0; document.querySelectorAll(".cell input").forEach(el => { const [r, c] = el.dataset.k.split(",").map(Number); const ch = w.crossword.words.flatMap(cwCells).find(x => x[0] === r && x[1] === c)[2]; total++; el.classList.remove("ok", "no"); if (el.value) { if (el.value === ch) { el.classList.add("ok"); right++; } else el.classList.add("no"); } });
+      const st2 = $("#cwstatus"); st2.textContent = right === total ? "🎉 Every square is right!" : `${right} of ${total} squares are right so far.`; st2.className = "status" + (right === total ? " good" : ""); return; }
+    case "cwreveal": w.crossword.words.forEach(wd => cwCells(wd).forEach(([r, c, ch]) => s.cwVals[r + "," + c] = ch)); break;
+    case "cwclear": s.cwVals = {}; break;
+    case "ws": wsPick(+b.dataset.r, +b.dataset.c); break;
+    case "wsreset": s.found = []; break;
+    case "flip": if (!s.revealed.includes(i)) s.revealed.push(i); break;
+  }
+  rerender();
+});
+document.addEventListener("keydown", e => {
+  if (section !== "story" || e.target.matches("input, textarea, select") || $("#addDlg").open) return;
+  const s = S(), n = storyLen(W());
+  if (e.key === "ArrowRight" && s.scene < n - 1) { s.scene++; rerender(); }
+  if (e.key === "ArrowLeft" && s.scene > 0) { s.scene--; rerender(); }
+});
+let hdone = {}; try { hdone = JSON.parse(localStorage.getItem("bloomers-done") || "{}") || {}; } catch (e) {}
+const doneKey = (s, w) => s.id + ":" + (w.added ? w.added.key : "w" + w.id);
+let hq = "", hopen = null;
+window.tRefresh=function(){if(document.body.classList.contains("home"))renderHome()};
+function renderHome() {
+  hush0(); document.body.classList.add("home"); document.body.dataset.week = "1";
+  $("#brandname").textContent = "Bloomers";
+  if (!hopen) { hopen = {}; SERIES.forEach((s, i) => { hopen[s.id] = false; }); }
+  const hv = $("#homeView"); hv.hidden = false;
+  hv.innerHTML = `<section class="hintro"><div><h1>Bloomers Lessons</h1><p>Bible lessons for ages 6-13. Tap a lesson to teach it.</p></div><button class="addbtn" data-addlesson type="button">＋ Add a lesson</button></section>
+  <div class="hfind"><input id="hsearch" type="search" placeholder="Search lessons: a title, Bible book or topic" value="${esc(hq)}" aria-label="Search lessons"></div>` +
+    SERIES.map(s => `<details class="hgroup" id="g-${esc(s.id)}" data-g="${esc(s.id)}" ${hopen[s.id] ? "open" : ""}><summary><span class="hseries">${esc(s.name)}</span><span class="hcount">${s.weeks.length} ${s.weeks.length === 1 ? "lesson" : "lessons"}</span></summary><div class="hlist">${s.weeks.map(w => `<div class="hitem" data-open="${esc(s.id)}" data-w="${w.id}" data-text="${esc((s.name + " " + w.title + " " + w.ref + " " + w.bigIdea).toLowerCase())}" role="button" tabindex="0"><div class="em" aria-hidden="true">${esc(w.emoji)}</div><div><div class="ref">${s.weeks.length > 1 ? "Week " + w.id + " · " : ""}${esc(w.ref)}</div><h3>${esc(w.title)}</h3><p>${esc(w.bigIdea)}</p></div><span class="hside">${tBadge(s,w)}<span class="hgo" aria-hidden="true">→</span></span></div>`).join("")}</div></details>`).join("") +
+    `<p class="hnone" id="hnone" hidden>No lessons match your search.</p>`;
+  applySearch();
+}
+function applySearch() {
+  const q = hq.trim().toLowerCase(); let any = false;
+  document.querySelectorAll(".hgroup").forEach(g => {
+    let n = 0; g.querySelectorAll(".hitem").forEach(it => { const ok = !q || it.dataset.text.includes(q); it.hidden = !ok; if (ok) n++; });
+    g.hidden = n === 0; if (q && n) g.open = true; if (n) any = true;
+  });
+  const none = $("#hnone"); if (none) none.hidden = any;
+}
+function hush0() {}
+function openLesson(id, wk) { setSeries(id); week = Math.min(wk, WEEKS.length) || 1; section = "story"; document.body.classList.remove("home"); $("#homeView").hidden = true; render(); window.scrollTo({ top: 0 }); }
+$("#homeView").addEventListener("click", e => {
+  if (e.target.closest("[data-addlesson]")) return openForm(null);
+  const j = e.target.closest("[data-jump]");
+  if (j) { const g = document.getElementById("g-" + j.dataset.jump); if (g) { g.open = true; hopen[j.dataset.jump] = true; g.scrollIntoView({ behavior: "smooth", block: "start" }); } return; }
+  const o = e.target.closest("[data-open]"); if (o) openLesson(o.dataset.open, +o.dataset.w);
+});
+$("#homeView").addEventListener("input", e => { if (e.target.id === "hsearch") { hq = e.target.value; applySearch(); } });
+$("#homeView").addEventListener("toggle", e => { const g = e.target.closest && e.target.closest(".hgroup"); if (g && !hq) hopen[g.dataset.g] = g.open; }, true);
+$("#homeView").addEventListener("keydown", e => { const o = e.target.closest("[data-open]"); if (o && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openLesson(o.dataset.open, +o.dataset.w); } });
+$("#allBtn").addEventListener("click", renderHome);
+render();
+if (!(location.hash || "").slice(1)) renderHome();
+(async () => {
+  try { db = await window.claude?.use?.("db"); } catch (e) { db = null; }
+  try { userApi = await window.claude?.use?.("user"); } catch (e) { userApi = null; }
+  if (userApi) {
+    try { isOwner = !!(await userApi.isOwner()); } catch (e) {}
+    try { const c = await userApi.can("data.write"); canShared = c === null || c === undefined ? null : !!c; } catch (e) {}
+    try { me = await userApi.id(); } catch (e) {}
+  }
+  if (!db) { canShared = false; if (pending && applyPos(pending)) render(); pending = null; return; }
+  db.collection("lessons").limit(500).onSnapshot(snap => {
+    SHARED = snap.docs.filter(d => d.exists).map(d => ({ ...d.data(), key: d.id }));
+    rebuild();
+    if (pending && applyPos(pending)) pending = null;
+    if (!snap.metadata.fromCache) pending = null;
+    render(); if (document.body.classList.contains("home")) renderHome();
+  }, () => {});
+})();
+</script>
+
+</body></html>
